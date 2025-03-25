@@ -813,7 +813,7 @@ for i in range(0, len(my_vislist)):
         points_to_concat = glob.glob(my_visFile + '.' + my_submosaic + "*.iter1") # NOTE.- This way, we concat the measurement sets of the submosaic (NOselfcal and with the self-cal pointings)
                                                                                    # NOTE. This will ony work if we do not have measurement sets from iter 2 in the directory...
 
-        print('::: VOLS ::: ... Measurement sets to concatenate: ' + points_to_concat)
+        print('::: VOLS ::: ... Measurement sets to concatenate: ' + str(points_to_concat))
 
         
         os.system('rm -r ' + my_visFile + '.' + my_submosaic+'.SELFCAL.BRIGHT_SOURCES')
@@ -1168,7 +1168,7 @@ for i in range(0, len(my_vislist)):
         
         points_to_concat = glob.glob(my_visFile + '.' + my_submosaic + "*.iter2") # NOTE.- This way, we concat the measurement sets of the submosaics that have been self-calibrated in the second round 
 
-        print('::: VOLS ::: ... Measurement sets to concatenate: ' + points_to_concat)
+        print('::: VOLS ::: ... Measurement sets to concatenate: ' + str(points_to_concat))
 
         my_visFile_final = my_visFile + '.' + my_submosaic+'.SELFCAL.FINAL' # NO! we have to concatenate also the self-calibrated points!!
 
