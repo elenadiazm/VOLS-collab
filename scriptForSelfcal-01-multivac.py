@@ -1090,7 +1090,7 @@ for i in range(0, len(my_vislist)):
             my_catalog_df.at[index, 'pointings'] = points_in_region 
 
         my_catalog_df.sort_values(by=['Peak_flux'], ascending=False, inplace=True) # Sorting from higher value to lower value of the peak flux
-
+        my_catalog_df.to_csv(my_catalog, index=False)
 
         for index,row in my_catalog_df.iterrows():
 

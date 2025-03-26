@@ -35,32 +35,34 @@ beam_radius = (theta_pb / 60) / 2  # beam radius in degrees
 
 # Measurement sets to image
 
-my_visFileBaseName = ['22A-195.sb41668223.eb41752682.59672.87566575232_cont',
-'22A-195.sb41668223.eb41756347.59679.919291342594_cont',
-'22A-195.sb41668223.eb41763155.59682.964581215274_cont',
-'22A-195.sb41668223.eb41771911.59684.805362025465_cont',
-'22A-195.sb41668223.eb41774359.59688.783021979165_cont',
-'22A-195.sb41668223.eb41776239.59690.95766400463_cont',
-'22A-195.sb41668223.eb41784557.59692.92574443287_cont',
-'22A-195.sb41668223.eb41784722.59693.823116562504_cont',
-'22A-195.sb41668223.eb41784724.59693.95610815972_cont',
-'22A-195.sb41668223.eb41785635.59695.81217344907_cont',
-'22A-195.sb41668223.eb41788325.59698.93521715278_cont',
-'22A-195.sb41668223.eb41788343.59699.900189837965_cont',
-'22A-195.sb41668223.eb41788359.59700.754512060186_cont',
-'22A-195.sb41668223.eb41788361.59700.88744737269_cont',
-'22A-195.sb41668223.eb41788874.59701.92147296296_cont',
-'22A-195.sb41668223.eb41789898.59702.90341413194_cont',
-'22A-195.sb41668223.eb41815091.59721.7578799537_cont',
-'22A-195.sb41668223.eb41818503.59723.85374815972_cont',
-'22A-195.sb41668223.eb41837135.59733.80435298611_cont',
-'22A-195.sb41668223.eb41838351.59734.75052173611_cont',
-'22A-195.sb41668223.eb41842850.59737.742964062505_cont',
-'22A-195.sb41668223.eb41848883.59740.76904108796_cont',
-'22A-195.sb41668223.eb41849717.59741.79960082176_cont',
-'22A-195.sb41668223.eb41852333.59744.63347153935_cont',
-'22A-195.sb41668223.eb41852443.59744.76640462963_cont',
-'22A-195.sb41668223.eb41905952.59761.608695324074_cont']
+# my_visFileBaseName = ['22A-195.sb41668223.eb41752682.59672.87566575232_cont',
+# '22A-195.sb41668223.eb41756347.59679.919291342594_cont',
+# '22A-195.sb41668223.eb41763155.59682.964581215274_cont',
+# '22A-195.sb41668223.eb41771911.59684.805362025465_cont',
+# '22A-195.sb41668223.eb41774359.59688.783021979165_cont',
+# '22A-195.sb41668223.eb41776239.59690.95766400463_cont',
+# '22A-195.sb41668223.eb41784557.59692.92574443287_cont',
+# '22A-195.sb41668223.eb41784722.59693.823116562504_cont',
+# '22A-195.sb41668223.eb41784724.59693.95610815972_cont',
+# '22A-195.sb41668223.eb41785635.59695.81217344907_cont',
+# '22A-195.sb41668223.eb41788325.59698.93521715278_cont',
+# '22A-195.sb41668223.eb41788343.59699.900189837965_cont',
+# '22A-195.sb41668223.eb41788359.59700.754512060186_cont',
+# '22A-195.sb41668223.eb41788361.59700.88744737269_cont',
+# '22A-195.sb41668223.eb41788874.59701.92147296296_cont',
+# '22A-195.sb41668223.eb41789898.59702.90341413194_cont',
+# '22A-195.sb41668223.eb41815091.59721.7578799537_cont',
+# '22A-195.sb41668223.eb41818503.59723.85374815972_cont',
+# '22A-195.sb41668223.eb41837135.59733.80435298611_cont',
+# '22A-195.sb41668223.eb41838351.59734.75052173611_cont',
+# '22A-195.sb41668223.eb41842850.59737.742964062505_cont',
+# '22A-195.sb41668223.eb41848883.59740.76904108796_cont',
+# '22A-195.sb41668223.eb41849717.59741.79960082176_cont',
+# '22A-195.sb41668223.eb41852333.59744.63347153935_cont',
+# '22A-195.sb41668223.eb41852443.59744.76640462963_cont',
+# '22A-195.sb41668223.eb41905952.59761.608695324074_cont']
+
+my_visFileBaseName = ['22A-195.sb41668223.eb41752682.59672.87566575232_cont']
 
 my_vislist = [basename + '.ms' for basename in my_visFileBaseName]
 
@@ -829,8 +831,8 @@ for i in range(0, len(my_vislist)):
 
         # os.system('mkdir -p ' + my_dir + 'images/selfcal/bright_sources')
 
-        # my_imageFile = my_dir + 'images/selfcal/bright_sources/VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
-        # my_maskFile = my_dir + 'masks/clean/VOLS_clean_mask_20sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) 
+        my_imageFile = my_dir + 'images/selfcal/bright_sources/VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
+        my_maskFile = my_dir + 'masks/clean/VOLS_clean_mask_20sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) 
 
         # print('::: VOLS ::: ... Creating the self-calibrated image with the calibration spw by spw on the pointings that contain bright sources')
 
@@ -920,40 +922,40 @@ for i in range(0, len(my_vislist)):
         #            )
 
 
-        # my_imageFile = my_dir + 'images/selfcal/bright_sources/VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
+        my_imageFile = my_dir + 'images/selfcal/bright_sources/VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
 
-        # os.system('cp -r ' + my_imageFile + '.image.tt0 .')
+        os.system('cp -r ' + my_imageFile + '.image.tt0 .')
 
-        # print('::: VOLS ::: ... Measuring the Median Absolute Deviation (MAD)')
+        print('::: VOLS ::: ... Measuring the Median Absolute Deviation (MAD)')
 
-        # selfcal_bright_sources_stats = imstat(imagename= my_imageFile +'.image.tt0')
-        # mad = selfcal_bright_sources_stats['medabsdevmed'][0]
+        selfcal_bright_sources_stats = imstat(imagename= my_imageFile +'.image.tt0')
+        mad = selfcal_bright_sources_stats['medabsdevmed'][0]
 
-        # print('==> MAD: '+ str(mad) + ' Jy/beam')
+        print('==> MAD: '+ str(mad) + ' Jy/beam')
 
-        # print('::: VOLS ::: ... Setting a threshold of MAD x 1.5 x 10, similar to a 10sigma threshold')
+        print('::: VOLS ::: ... Setting a threshold of MAD x 1.5 x 10, similar to a 10sigma threshold')
 
-        # threshold = mad*1.5*10
+        threshold = mad*1.5*10
 
-        # print('::: VOLS ::: ... Creating the mask for submosaic ' + str(my_submosaic) + ' using the self-calibrated image')
+        print('::: VOLS ::: ... Creating the mask for submosaic ' + str(my_submosaic) + ' using the self-calibrated image')
 
-        # os.system('mkdir -p ' + my_dir + 'masks/selfcal')
+        os.system('mkdir -p ' + my_dir + 'masks/selfcal')
 
-        # my_maskFile = my_dir + 'masks/selfcal/VOLS_selfcal_mask_10sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
+        my_maskFile = my_dir + 'masks/selfcal/VOLS_selfcal_mask_10sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
 
-        # os.system('rm -rf ' + my_maskFile + '.*')
+        os.system('rm -rf ' + my_maskFile + '.*')
 
-        # # NOTE.- not sure why but immath is not working if the image is not in the same directory.
+        # NOTE.- not sure why but immath is not working if the image is not in the same directory.
 
-        # immath(
-        #             imagename='VOLS_selfcal_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) +'.image.tt0',
-        #             expr='iif(IM0 >' + str(threshold) + ', 1.0, 0.0)',
-        #             outfile=my_maskFile + '.mask'
-        #         )
+        immath(
+                    imagename='VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)  + '.image.tt0',
+                    expr='iif(IM0 >' + str(threshold) + ', 1.0, 0.0)',
+                    outfile=my_maskFile + '.mask'
+                )
 
-        # os.system('rm -r VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)  + '.image.tt0')
+        os.system('rm -r VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)  + '.image.tt0')
 
-        # os.system('mkdir -p ' + my_dir + 'images/selfcal/bright_sources')
+        os.system('mkdir -p ' + my_dir + 'images/selfcal/bright_sources')
 
         my_imageFile = my_dir + 'images/selfcal/bright_sources/VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)+'_hogbom'
         my_imageName = 'VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)+'_hogbom'
@@ -961,43 +963,43 @@ for i in range(0, len(my_vislist)):
 
         print('::: VOLS ::: ... Creating the self-calibrated image using hogbom and the mask at 10sigma')
 
-        # os.system('rm -rf ' + my_imageFile + '.*')
+        os.system('rm -rf ' + my_imageFile + '.*')
 
 
-        # tclean(vis=my_visFile_selfcal,
-        #            uvrange='>35klambda', # >100kl because we are using this image to create the mask
-        #            datacolumn='corrected',
-        #            spw=my_spws,
-        #            field=my_submosaicData['my_submosaicPointings'][my_submosaic],
-        #            phasecenter=my_submosaicData['my_submosaicPhaseCenter'][my_submosaic],
-        #            imagename=my_imageFile,
-        #            imsize=my_submosaicData['my_submosaicImsize'][my_submosaic],
-        #            cell=['0.125arcsec'],
-        #            stokes='I',
-        #            specmode='mfs',
-        #            gridder='mosaic',
-        #            mosweight=False,
-        #            usepointing=False,
-        #            pblimit=0.1,
-        #            deconvolver='hogbom',
-        #            #nterms=2,
-        #            restoration=True,
-        #            pbcor=False,
-        #            weighting='briggs',
-        #            robust=0.5,
-        #            npixels=0,
-        #            niter=10000,
-        #            usemask='user',
-        #            mask=my_maskFile + '.mask',  # using now the mask created with the clean image
-        #            threshold='0.1mJy',
-        #            interactive=False,
-        #            restart=False,
-        #            savemodel='modelcolumn',
-        #            calcres=True,
-        #            calcpsf=True,
-        #            parallel=False,
-        #            pbmask=0.0,
-        #            )
+        tclean(vis=my_visFile_selfcal,
+                   uvrange='>35klambda', # >100kl because we are using this image to create the mask
+                   datacolumn='corrected',
+                   spw=my_spws,
+                   field=my_submosaicData['my_submosaicPointings'][my_submosaic],
+                   phasecenter=my_submosaicData['my_submosaicPhaseCenter'][my_submosaic],
+                   imagename=my_imageFile,
+                   imsize=my_submosaicData['my_submosaicImsize'][my_submosaic],
+                   cell=['0.125arcsec'],
+                   stokes='I',
+                   specmode='mfs',
+                   gridder='mosaic',
+                   mosweight=False,
+                   usepointing=False,
+                   pblimit=0.1,
+                   deconvolver='hogbom',
+                   #nterms=2,
+                   restoration=True,
+                   pbcor=False,
+                   weighting='briggs',
+                   robust=0.5,
+                   npixels=0,
+                   niter=10000,
+                   usemask='user',
+                   mask=my_maskFile + '.mask',  # using now the mask created with the clean image
+                   threshold='0.1mJy',
+                   interactive=False,
+                   restart=False,
+                   savemodel='modelcolumn',
+                   calcres=True,
+                   calcpsf=True,
+                   parallel=False,
+                   pbmask=0.0,
+                   )
         
         exportfits(imagename = my_imageFile + '.image', fitsimage = my_imageFile + '.fits', overwrite = True)
         
@@ -1091,6 +1093,7 @@ for i in range(0, len(my_vislist)):
 
         my_catalog_df.sort_values(by=['Peak_flux'], ascending=False, inplace=True) # Sorting from higher value to lower value of the peak flux
 
+        my_catalog_df.to_csv(my_catalog, index=False)
 
         for index,row in my_catalog_df.iterrows():
 
