@@ -71,7 +71,7 @@ my_dates = ['20220403','20220410','20220413','20220415','20220419','20220421','2
 
 # Submosaics to image
 
-my_submosaics = ['00']
+my_submosaics = ['01']
 
 # CLEANing is split into different submosaics
 
