@@ -264,7 +264,7 @@ for i in range(0, len(my_vislist)):
 
         print('==> MAD: '+ str(mad) + ' Jy/beam')
 
-        print('::: VOLS ::: ... Setting a threshold of MAD x 1.5 x 20, similar to a 30sigma threshold')
+        print('::: VOLS ::: ... Setting a threshold of MAD x 1.5 x 30, similar to a 30sigma threshold')
 
         threshold = mad*1.5*30
 
@@ -813,15 +813,15 @@ for i in range(0, len(my_vislist)):
         #       datacolumn = 'data')
               
         
-        # points_to_concat = glob.glob(my_visFile + '.' + my_submosaic + "*.iter1") # NOTE.- This way, we concat the measurement sets of the submosaic (NOselfcal and with the self-cal pointings)
+        points_to_concat = glob.glob(my_visFile + '.' + my_submosaic + "*.iter1") # NOTE.- This way, we concat the measurement sets of the submosaic (NOselfcal and with the self-cal pointings)
         #                                                                            # NOTE. This will ony work if we do not have measurement sets from iter 2 in the directory...
 
-        # print('::: VOLS ::: ... Measurement sets to concatenate: ' + str(points_to_concat))
+        print('::: VOLS ::: ... Measurement sets to concatenate: ' + str(points_to_concat))
 
         
-        # os.system('rm -r ' + my_visFile + '.' + my_submosaic+'.SELFCAL.BRIGHT_SOURCES')
+        os.system('rm -r ' + my_visFile + '.' + my_submosaic+'.SELFCAL.BRIGHT_SOURCES')
 
-        # concat(vis = points_to_concat, concatvis = my_visFile + '.' + my_submosaic+'.SELFCAL.BRIGHT_SOURCES')
+        concat(vis = points_to_concat, concatvis = my_visFile + '.' + my_submosaic+'.SELFCAL.BRIGHT_SOURCES')
 
         print('::: VOLS ::: ... Measurement set ' + my_visFile + '.' + my_submosaic+'.SELFCAL.BRIGHT_SOURCES has been created')
 
