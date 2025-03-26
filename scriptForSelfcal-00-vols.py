@@ -132,7 +132,7 @@ for i in range(0, len(my_vislist)):
 
         # print('::: VOLS ::: ... Submosaic ' + str(my_submosaic) + ' centered at ' + str(my_submosaicData['my_submosaicPhaseCenter'][my_submosaic]))
 
-        # my_spws = '2~31' # NOTE.- Use this in case your spw's are sorted by frequency (see script-order-spw.py)
+        my_spws = '2~31' # NOTE.- Use this in case your spw's are sorted by frequency (see script-order-spw.py)
 
         print('==> Using spws ' + my_spws + ' for the imaging')
 

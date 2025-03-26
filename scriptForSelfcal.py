@@ -763,6 +763,7 @@ for i in range(0, len(my_vislist)):
                    parallel=False,
                    pbmask=0.0,
                    )
+            
 
                 print('::: VOLS ::: ... Checking the RMS from an emission-free region of the image, near the bright source')
 
@@ -877,7 +878,7 @@ for i in range(0, len(my_vislist)):
             my_imageFile = my_dir + 'images/selfcal/bright_sources/VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)+'_35klambda'
             my_maskFile = my_dir + 'masks/clean/VOLS_clean_mask_20sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) 
 
-            print('::: VOLS ::: ... Creating another self-calibrated image excluding only short baselines (>35klambda')
+            print('::: VOLS ::: ... Creating another self-calibrated image excluding only short baselines (>35klambda)')
 
             os.system('rm -rf ' + my_imageFile + '.*')
 
@@ -997,6 +998,8 @@ for i in range(0, len(my_vislist)):
                    parallel=False,
                    pbmask=0.0,
                    )
+        
+        exportfits(imagename = my_imageFile + '.image', fitsimage = my_imageFile + '.fits', overwrite = True)
         
         print('::: VOLS ::: ... Saving the model')
 
