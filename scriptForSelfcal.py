@@ -18,6 +18,16 @@ import glob
 my_dir = '/share/Part2/ediaz/VOLS/'     # multivac
 #my_dir = '/home/VOLS/'                    # servervols
 
+my_dir_ms = 'CALIBRATED_CONTINUUM/'
+
+
+# Parameters to sort the spectral windows by frequency
+
+fld = '3~117'
+win = '7~23, 0~6,24~31'
+Cave = 0
+Tave = '8s'
+
 
 # User-defined parameters
 
@@ -103,7 +113,7 @@ my_submosaicData = {
 '02': '>35klambda',
 },
 
-'my_rms':{  # NOTE.- NEED TO COPY THEM 
+'my_rms':{   
 '00': my_dir + 'regions/measure-rms-00.crtf',
 '01':my_dir + 'regions/measure-rms-01.crtf',
 '02':my_dir + 'regions/measure-rms-02.crtf',
@@ -112,23 +122,38 @@ my_submosaicData = {
 
 for i in range(0, len(my_vislist)):
 
-    my_visFile = my_dir + 'CALIBRATED_CONTINUUM_SPW_ORDERED/' + my_vislist[i]
-
     print('::: VOLS ::: ... Processing the measurement set ' + my_vislist[i])
+
+    print('::: VOLS ::: ... Sorting the spectral windows by frequency')
+
+    os.system('mkdir -p ' + my_dir + 'CALIBRATED_CONTINUUM_SPW_ORDERED/')
+
+    os.system('rm -rf ' + my_dir + 'CALIBRATED_CONTINUUM_SPW_ORDERED/' + my_vislist[i])
+
+    split(vis =  my_dir + my_dir_ms + my_vislist[i], outputvis = my_dir + 'CALIBRATED_CONTINUUM_SPW_ORDERED/' + my_vislist[i],
+        field = fld,
+        datacolumn = 'data',
+        spw = win,
+        timebin = Tave,
+        width = Cave)
+
+    my_visFile = my_dir + 'CALIBRATED_CONTINUUM_SPW_ORDERED/' + my_vislist[i]
 
     delmod(vis=my_visFile, otf= False)
 
-    all_pointings = {f'P{j}' for j in range(1, 116)} 
+    all_pointings = {f'P{j}' for j in range(1, 116)}  # Creating a set containing all the pointings
 
     for my_submosaic in my_submosaics:
 
-        #log_file = 'imagin-selfcal.' + str(my_dates[i]) + '.' +str(my_submosaic)+ '.log'
+        os.system('mkdir -p ' + my_dir + 'logs')
 
-        #original_stdout = sys.stdout
-        #sys.stdout = open(log_file,'w')
+        log_file =  my_dir +  'logs/' + 'imagin-selfcal.' + str(my_dates[i]) + '.' +str(my_submosaic)+ '.log'
+
+        original_stdout = sys.stdout
+        sys.stdout = open(log_file,'w') # in order to save the printed messages in a log file
 
         selfcal_pointings = set()  # Setting unique values for the self-calibrated pointings -- ON EACH SUBMOSAIC ! -- I know this cant be efficient if we have a source on a pointing that is in submosaic '00' and '01' for example,
-                                    # but i am not sure how to take into account the pointings that are self-calibrated in other submosaics
+                                   # but i am not sure how to take into account the pointings that are self-calibrated in other submosaics
 
         print('::: VOLS ::: ... Submosaic ' + str(my_submosaic) + ' centered at ' + str(my_submosaicData['my_submosaicPhaseCenter'][my_submosaic]))
 
@@ -136,199 +161,199 @@ for i in range(0, len(my_vislist)):
 
         print('==> Using spws ' + my_spws + ' for the imaging')
 
-        # os.system('mkdir -p ' + my_dir + 'images/dirty')
+        os.system('mkdir -p ' + my_dir + 'images/dirty')
 
-        # my_imageFile = my_dir + 'images/dirty/VOLS_dirty_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
+        my_imageFile = my_dir + 'images/dirty/VOLS_dirty_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
 
-        # os.system('rm -rf ' + my_imageFile + '.*')
+        os.system('rm -rf ' + my_imageFile + '.*')
 
-        # print('::: VOLS ::: ... Creating a dirty image')
+        print('::: VOLS ::: ... Creating a dirty image')
 
-        # tclean(vis=my_visFile,
-        #            uvrange=my_submosaicData['my_uvrange'][my_submosaic], 
-        #            datacolumn='data',
-        #            spw=my_spws,
-        #            field=my_submosaicData['my_submosaicPointings'][my_submosaic],
-        #            phasecenter=my_submosaicData['my_submosaicPhaseCenter'][my_submosaic],
-        #            imagename=my_imageFile,
-        #            imsize=my_submosaicData['my_submosaicImsize'][my_submosaic],
-        #            cell=['0.125arcsec'],
-        #            stokes='I',
-        #            specmode='mfs',
-        #            gridder='mosaic',
-        #            mosweight=False,
-        #            usepointing=False,
-        #            pblimit=0.1,
-        #            deconvolver='mtmfs',
-        #            nterms=2,
-        #            restoration=True,
-        #            pbcor=False,
-        #            weighting='briggs',
-        #            robust=0.5,
-        #            npixels=0,
-        #            niter=0,
-        #            #usemask='user',
-        #            #mask=my_maskFile,
-        #            #threshold='0.1mJy',
-        #            interactive=False,
-        #            restart=False,
-        #            savemodel='none',
-        #            calcres=True,
-        #            calcpsf=True,
-        #            parallel=False,
-        #            pbmask=0.0,
-        #            )
-        # os.system('cp -r ' + my_imageFile + '.image.tt0 .')
+        tclean(vis=my_visFile,
+                   uvrange=my_submosaicData['my_uvrange'][my_submosaic], 
+                   datacolumn='data',
+                   spw=my_spws,
+                   field=my_submosaicData['my_submosaicPointings'][my_submosaic],
+                   phasecenter=my_submosaicData['my_submosaicPhaseCenter'][my_submosaic],
+                   imagename=my_imageFile,
+                   imsize=my_submosaicData['my_submosaicImsize'][my_submosaic],
+                   cell=['0.125arcsec'],
+                   stokes='I',
+                   specmode='mfs',
+                   gridder='mosaic',
+                   mosweight=False,
+                   usepointing=False,
+                   pblimit=0.1,
+                   deconvolver='mtmfs',
+                   nterms=2,
+                   restoration=True,
+                   pbcor=False,
+                   weighting='briggs',
+                   robust=0.5,
+                   npixels=0,
+                   niter=0,
+                   #usemask='user',
+                   #mask=my_maskFile,
+                   #threshold='0.1mJy',
+                   interactive=False,
+                   restart=False,
+                   savemodel='none',
+                   calcres=True,
+                   calcpsf=True,
+                   parallel=False,
+                   pbmask=0.0,
+                   )
+        os.system('cp -r ' + my_imageFile + '.image.tt0 .')
 
-        # print('::: VOLS ::: ... Measuring the peak of the image')
+        print('::: VOLS ::: ... Measuring the peak of the image')
 
-        # dirty_stats = imstat(imagename= my_imageFile +'.image.tt0')
-        # peak = dirty_stats['max'][0]
+        dirty_stats = imstat(imagename= my_imageFile +'.image.tt0')
+        peak = dirty_stats['max'][0]
 
-        # print('==> Peak: '+ str(peak) + ' Jy/beam')
+        print('==> Peak: '+ str(peak) + ' Jy/beam')
 
-        # print('::: VOLS ::: ... Setting a threshold of 80 percent of the peak')
+        print('::: VOLS ::: ... Setting a threshold of 80 percent of the peak')
 
-        # threshold = 0.8 * peak
+        threshold = 0.8 * peak
 
-        # print('::: VOLS ::: ... Creating the mask for submosaic ' + str(my_submosaic) + ' using the dirty image')
+        print('::: VOLS ::: ... Creating the mask for submosaic ' + str(my_submosaic) + ' using the dirty image')
 
-        # os.system('mkdir -p ' + my_dir + 'masks/dirty')
+        os.system('mkdir -p ' + my_dir + 'masks/dirty')
 
-        # my_maskFile = my_dir + 'masks/dirty/VOLS_dirty_mask_0.8peak_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
+        my_maskFile = my_dir + 'masks/dirty/VOLS_dirty_mask_0.8peak_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
 
-        # os.system('rm -rf ' + my_maskFile + '.*')
+        os.system('rm -rf ' + my_maskFile + '.*')
 
-        # # NOTE.- not sure why but immath is not working if the image is not in the same directory.
+        # NOTE.- not sure why but immath is not working if the image is not in the same directory.
 
-        # immath(
-        #             imagename='VOLS_dirty_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) +'.image.tt0',
-        #             expr='iif(IM0 >' + str(threshold) + ', 1.0, 0.0)',
-        #             outfile=my_maskFile + '.mask'
-        #         )
+        immath(
+                    imagename='VOLS_dirty_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) +'.image.tt0',
+                    expr='iif(IM0 >' + str(threshold) + ', 1.0, 0.0)',
+                    outfile=my_maskFile + '.mask'
+                )
 
-        # os.system('rm -r VOLS_dirty_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)  + '.image.tt0')
+        os.system('rm -r VOLS_dirty_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)  + '.image.tt0')
 
-        # print('::: VOLS ::: ... Creating a clean image')
+        print('::: VOLS ::: ... Creating a clean image')
 
-        # os.system('mkdir -p ' + my_dir + 'images/clean')
+        os.system('mkdir -p ' + my_dir + 'images/clean')
 
-        # my_imageFile = my_dir + 'images/clean/VOLS_shallow_clean_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
-        # my_maskFile = my_dir + 'masks/dirty/VOLS_dirty_mask_0.8peak_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) # already defined
+        my_imageFile = my_dir + 'images/clean/VOLS_shallow_clean_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
+        my_maskFile = my_dir + 'masks/dirty/VOLS_dirty_mask_0.8peak_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) # already defined
 
-        # os.system('rm -rf ' + my_imageFile + '.*')
+        os.system('rm -rf ' + my_imageFile + '.*')
 
-        # tclean(vis=my_visFile,
-        #           uvrange=my_submosaicData['my_uvrange'][my_submosaic], 
-        #           datacolumn='data', 
-        #           spw=my_spws,
-        #           field=my_submosaicData['my_submosaicPointings'][my_submosaic],
-        #           phasecenter=my_submosaicData['my_submosaicPhaseCenter'][my_submosaic],
-        #           imagename=my_imageFile,
-        #           imsize=my_submosaicData['my_submosaicImsize'][my_submosaic],
-        #           cell=['0.125arcsec'],
-        #           stokes='I',
-        #           specmode='mfs',
-        #           gridder='mosaic',
-        #           mosweight=False,
-        #           usepointing=False,
-        #           pblimit=0.1,
-        #           deconvolver='mtmfs',
-        #           nterms=2,
-        #           restoration=True,
-        #           pbcor=False,
-        #           weighting='briggs',
-        #           robust=0.5,
-        #           npixels=0,
-        #           niter=10000000,
-        #           usemask='user',
-        #           mask=my_maskFile + '.mask',
-        #           threshold='0.1mJy',
-        #           interactive=False,
-        #           restart=False,
-        #           savemodel='none',
-        #           calcres=True,
-        #           calcpsf=True,
-        #           parallel=False,
-        #           pbmask=0.0,
-        #           )
+        tclean(vis=my_visFile,
+                  uvrange=my_submosaicData['my_uvrange'][my_submosaic], 
+                  datacolumn='data', 
+                  spw=my_spws,
+                  field=my_submosaicData['my_submosaicPointings'][my_submosaic],
+                  phasecenter=my_submosaicData['my_submosaicPhaseCenter'][my_submosaic],
+                  imagename=my_imageFile,
+                  imsize=my_submosaicData['my_submosaicImsize'][my_submosaic],
+                  cell=['0.125arcsec'],
+                  stokes='I',
+                  specmode='mfs',
+                  gridder='mosaic',
+                  mosweight=False,
+                  usepointing=False,
+                  pblimit=0.1,
+                  deconvolver='mtmfs',
+                  nterms=2,
+                  restoration=True,
+                  pbcor=False,
+                  weighting='briggs',
+                  robust=0.5,
+                  npixels=0,
+                  niter=10000000,
+                  usemask='user',
+                  mask=my_maskFile + '.mask',
+                  threshold='0.1mJy',
+                  interactive=False,
+                  restart=False,
+                  savemodel='none',
+                  calcres=True,
+                  calcpsf=True,
+                  parallel=False,
+                  pbmask=0.0,
+                  )
 
-        # os.system('cp -r ' + my_imageFile + '.image.tt0 .')
+        os.system('cp -r ' + my_imageFile + '.image.tt0 .')
 
-        # print('::: VOLS ::: ... Measuring the Median Absolute Deviation (MAD)')
+        print('::: VOLS ::: ... Measuring the Median Absolute Deviation (MAD)')
 
-        # shallow_clean_stats = imstat(imagename= my_imageFile +'.image.tt0')
-        # mad = shallow_clean_stats['medabsdevmed'][0]
+        shallow_clean_stats = imstat(imagename= my_imageFile +'.image.tt0')
+        mad = shallow_clean_stats['medabsdevmed'][0]
 
-        # print('==> MAD: '+ str(mad) + ' Jy/beam')
+        print('==> MAD: '+ str(mad) + ' Jy/beam')
 
-        # print('::: VOLS ::: ... Setting a threshold of MAD x 1.5 x 20, similar to a 20sigma threshold')
+        print('::: VOLS ::: ... Setting a threshold of MAD x 1.5 x 20, similar to a 30sigma threshold')
 
-        # threshold = mad*1.5*20
+        threshold = mad*1.5*30
 
-        # print('::: VOLS ::: ... Creating the mask for submosaic ' + str(my_submosaic) + ' using the clean image')
+        print('::: VOLS ::: ... Creating the mask for submosaic ' + str(my_submosaic) + ' using the clean image')
 
-        # os.system('mkdir -p ' + my_dir + 'masks/clean')
+        os.system('mkdir -p ' + my_dir + 'masks/clean')
 
-        # my_maskFile = my_dir + 'masks/clean/VOLS_clean_mask_20sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
+        my_maskFile = my_dir + 'masks/clean/VOLS_clean_mask_30sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
 
-        # os.system('rm -rf ' + my_maskFile + '.*')
+        os.system('rm -rf ' + my_maskFile + '.*')
 
-        # # NOTE.- not sure why but immath is not working if the image is not in the same directory.
+        # NOTE.- not sure why but immath is not working if the image is not in the same directory.
 
-        # immath(
-        #             imagename='VOLS_shallow_clean_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) +'.image.tt0',
-        #             expr='iif(IM0 >' + str(threshold) + ', 1.0, 0.0)',
-        #             outfile=my_maskFile + '.mask'
-        #         )
+        immath(
+                    imagename='VOLS_shallow_clean_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) +'.image.tt0',
+                    expr='iif(IM0 >' + str(threshold) + ', 1.0, 0.0)',
+                    outfile=my_maskFile + '.mask'
+                )
 
-        # os.system('rm -r VOLS_shallow_clean_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)  + '.image.tt0')
+        os.system('rm -r VOLS_shallow_clean_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)  + '.image.tt0')
 
-        # print('::: VOLS ::: ... Creating a clean image using the mask')
+        print('::: VOLS ::: ... Creating a clean image using the mask')
 
-        # os.system('mkdir -p ' + my_dir + 'images/clean')
+        os.system('mkdir -p ' + my_dir + 'images/clean')
 
         my_imageFile = my_dir + 'images/clean/VOLS_clean_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
-        my_maskFile = my_dir + 'masks/clean/VOLS_clean_mask_20sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) # already defined
+        my_maskFile = my_dir + 'masks/clean/VOLS_clean_mask_30sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) # already defined
 
-        # os.system('rm -rf ' + my_imageFile + '.*')
+        os.system('rm -rf ' + my_imageFile + '.*')
 
-        # tclean(vis=my_visFile,
-        #           uvrange='>35klambda', # we do NOT need to create a mask 
-        #           datacolumn='data', 
-        #           spw=my_spws,
-        #           field=my_submosaicData['my_submosaicPointings'][my_submosaic],
-        #           phasecenter=my_submosaicData['my_submosaicPhaseCenter'][my_submosaic],
-        #           imagename=my_imageFile,
-        #           imsize=my_submosaicData['my_submosaicImsize'][my_submosaic],
-        #           cell=['0.125arcsec'],
-        #           stokes='I',
-        #           specmode='mfs',
-        #           gridder='mosaic',
-        #           mosweight=False,
-        #           usepointing=False,
-        #           pblimit=0.1,
-        #           deconvolver='mtmfs',
-        #           nterms=2,
-        #           restoration=True,
-        #           pbcor=False,
-        #           weighting='briggs',
-        #           robust=0.5,
-        #           npixels=0,
-        #           niter=10000000,
-        #           usemask='user',
-        #           mask=my_maskFile + '.mask',
-        #           threshold='0.1mJy',
-        #           interactive=False,
-        #           restart=False,
-        #           savemodel='none',
-        #           calcres=True,
-        #           calcpsf=True,
-        #           parallel=False,
-        #           pbmask=0.0,
-        #           )
+        tclean(vis=my_visFile,
+                  uvrange='>35klambda', # we do NOT need to create a mask 
+                  datacolumn='data', 
+                  spw=my_spws,
+                  field=my_submosaicData['my_submosaicPointings'][my_submosaic],
+                  phasecenter=my_submosaicData['my_submosaicPhaseCenter'][my_submosaic],
+                  imagename=my_imageFile,
+                  imsize=my_submosaicData['my_submosaicImsize'][my_submosaic],
+                  cell=['0.125arcsec'],
+                  stokes='I',
+                  specmode='mfs',
+                  gridder='mosaic',
+                  mosweight=False,
+                  usepointing=False,
+                  pblimit=0.1,
+                  deconvolver='mtmfs',
+                  nterms=2,
+                  restoration=True,
+                  pbcor=False,
+                  weighting='briggs',
+                  robust=0.5,
+                  npixels=0,
+                  niter=10000000,
+                  usemask='user',
+                  mask=my_maskFile + '.mask',
+                  threshold='0.1mJy',
+                  interactive=False,
+                  restart=False,
+                  savemodel='none',
+                  calcres=True,
+                  calcpsf=True,
+                  parallel=False,
+                  pbmask=0.0,
+                  )
        
-        # exportfits(imagename = my_imageFile + '.image.tt0', fitsimage = my_imageFile + '.fits', overwrite = True)
+        exportfits(imagename = my_imageFile + '.image.tt0', fitsimage = my_imageFile + '.fits', overwrite = True)
 
         print('::: VOLS ::: ... Checking the RMS from an emission-free region of the image')
 
@@ -393,7 +418,7 @@ for i in range(0, len(my_vislist)):
                         "Isl_Total_flux", "E_Isl_Total_flux", "Isl_rms", "Isl_mean", "Resid_Isl_rms", "Resid_Isl_mean", "S_Code"
                         ]
         
-        my_catalog_df = pd.read_csv(my_catalog, comment='#', names=column_names) # NOTE.- Need to check because the first lines are with #
+        my_catalog_df = pd.read_csv(my_catalog, comment='#', names=column_names)
 
         print('::: VOLS ::: ... Calculating the (S/N)_selfcal')
 
@@ -414,7 +439,7 @@ for i in range(0, len(my_vislist)):
 
         print('::: VOLS ::: ... Checking the pointings that contain each source')
 
-        listobs = pd.read_csv('vols-listobs-cband.csv', sep=';', header=0) # NOTE.- NEED TO ADD THIS TO EACH SERVER
+        listobs = pd.read_csv(my_dir + 'data/vols-listobs-cband.csv', sep=';', header=0) # NOTE.- NEED TO ADD THIS TO EACH SERVER
 
         coords = SkyCoord(ra=listobs['RA'], dec=listobs['Decl'], unit=(u.hourangle, u.deg))
 
@@ -466,8 +491,6 @@ for i in range(0, len(my_vislist)):
                 continue # this will skip to the next iteration of the index,row in bright_sources_df.iterrows() loop
 
             print('::: VOLS ::: ... The pointings ' + str(new_pointings) + ' are going to be self-calibrated')
-    
-            my_fields = ",".join(new_pointings)
 
             my_fields_str = ",".join(new_pointings) # TO BE WRITTEN LIKE 'P8,P9,P10'
             my_fields_join = "".join(new_pointings) # TO BE WRITTEN LIKE P8P9P10
@@ -477,6 +500,7 @@ for i in range(0, len(my_vislist)):
             # centerbox[[x, y], [x_width, y_width]]
 
             my_peak_region = 'centerbox[[' + str(row['RA']) + 'deg,' + str(row['DEC']) + 'deg],[3arcsec,3arcsec]]'
+
             ra_shift = row['RA'] + (10/3600) 
             my_rms_region = 'centerbox[[' + str(ra_shift) + 'deg,' + str(row["DEC"]) + 'deg],[' + '20arcsec,20arcsec]]'
 
@@ -487,7 +511,7 @@ for i in range(0, len(my_vislist)):
             os.system('rm -r ' + my_visFile+'.'+ my_submosaic + '.' +my_fields_join+ '.iter1')
 
             split(vis=my_visFile, 
-              outputvis=my_visFile+'.'+ my_submosaic + '.' +my_fields_join+ '.iter1', # NOTE.-  NEED TO CHECK HOW THIS IS WRITTEN
+              outputvis=my_visFile+'.'+ my_submosaic + '.' +my_fields_join+ '.iter1', 
               field=my_fields_str,
               datacolumn = 'data')
             
@@ -553,8 +577,10 @@ for i in range(0, len(my_vislist)):
                 snr_stat = imstat(imagename= my_imageFile +'.image', region=my_peak_region)
 
                 if 'rms' in rms_stat and len(rms_stat['rms']) > 0 and 'max' in snr_stat and len(snr_stat['max']) > 0:
-                    rms = rms_stat['rms'][0]  # better to check also if there is data in rms, to define another region, just in case the region we are measuring is empty but the source is on it                                                                                          
+
+                    rms = rms_stat['rms'][0]                                                                                         
                     peak = snr_stat['max'][0]
+
                 else:
                     print('Skipping iteration: Empty region found for ' + my_imageFile)
                     continue
@@ -794,12 +820,12 @@ for i in range(0, len(my_vislist)):
 
         print('::: VOLS ::: ... Pointings self-calibrated: ' + str(selfcal_pointings)) # not sure how is this variable written
 
-        # NOTE.- The self-calibrated measurement sets are written like 22A-195.sb41668223.eb41752682.59672.87566575232_cont.ms.(POINTINGSSELFCAL)
+        # NOTE.- The self-calibrated measurement sets are written like 22A-195.sb41668223.eb41752682.59672.87566575232_cont.ms.(POINTINGSSELFCAL).iter1
 
         not_selfcal_pointings = all_pointings - selfcal_pointings
         not_selfcal_pointings_str = ",".join(not_selfcal_pointings)
 
-        print('::: VOLS ::: ... Pointings not self-calibrated: ' + str(not_selfcal_pointings_str)) # not sure how is this variable written
+        print('::: VOLS ::: ... Pointings not self-calibrated: ' + str(not_selfcal_pointings))
 
         my_visFile_NOselfcal = my_visFile+ '.' + my_submosaic + '.NOselfcal.iter1'
 
@@ -812,7 +838,7 @@ for i in range(0, len(my_vislist)):
               
         
         points_to_concat = glob.glob(my_visFile + '.' + my_submosaic + "*.iter1") # NOTE.- This way, we concat the measurement sets of the submosaic (NOselfcal and with the self-cal pointings)
-                                                                                   # NOTE. This will ony work if we do not have measurement sets from iter 2 in the directory...
+                                                                                  
 
         print('::: VOLS ::: ... Measurement sets to concatenate: ' + str(points_to_concat))
 
@@ -830,7 +856,7 @@ for i in range(0, len(my_vislist)):
         os.system('mkdir -p ' + my_dir + 'images/selfcal/bright_sources')
 
         my_imageFile = my_dir + 'images/selfcal/bright_sources/VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
-        my_maskFile = my_dir + 'masks/clean/VOLS_clean_mask_20sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) 
+        my_maskFile = my_dir + 'masks/clean/VOLS_clean_mask_30sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) 
 
         print('::: VOLS ::: ... Creating the self-calibrated image with the calibration spw by spw on the pointings that contain bright sources')
 
@@ -876,7 +902,7 @@ for i in range(0, len(my_vislist)):
         if my_submosaic == '01':
 
             my_imageFile = my_dir + 'images/selfcal/bright_sources/VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)+'_35klambda'
-            my_maskFile = my_dir + 'masks/clean/VOLS_clean_mask_20sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) 
+            my_maskFile = my_dir + 'masks/clean/VOLS_clean_mask_30sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) 
 
             print('::: VOLS ::: ... Creating another self-calibrated image excluding only short baselines (>35klambda)')
 
@@ -946,7 +972,7 @@ for i in range(0, len(my_vislist)):
         # NOTE.- not sure why but immath is not working if the image is not in the same directory.
 
         immath(
-                    imagename='VOLS_selfcal_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) +'.image.tt0',
+                    imagename='VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) + '.image.tt0',
                     expr='iif(IM0 >' + str(threshold) + ', 1.0, 0.0)',
                     outfile=my_maskFile + '.mask'
                 )
@@ -1078,6 +1104,7 @@ for i in range(0, len(my_vislist)):
             points_in_region = []
             
             for k, coord in enumerate(coords):
+
                 # Calculate the separation between the current pointing and the target
                 separation = coord.separation(my_source)
 
@@ -1089,7 +1116,6 @@ for i in range(0, len(my_vislist)):
 
         my_catalog_df.sort_values(by=['Peak_flux'], ascending=False, inplace=True) # Sorting from higher value to lower value of the peak flux
         my_catalog_df.to_csv(my_catalog, index=False)
-
 
         for index,row in my_catalog_df.iterrows():
 
@@ -1119,7 +1145,7 @@ for i in range(0, len(my_vislist)):
             os.system('rm -r ' + my_visFile+'.'+ my_submosaic + '.' +my_fields_join+'.iter2')
 
             split(vis=my_visFile, 
-              outputvis=my_visFile+'.'+ my_submosaic + '.' +my_fields_join+'.iter2', # NOTE. This will ony
+              outputvis=my_visFile+'.'+ my_submosaic + '.' +my_fields_join+'.iter2', 
               field=my_fields_str,
               datacolumn = 'data')
             
@@ -1266,7 +1292,8 @@ for i in range(0, len(my_vislist)):
                    pbmask=0.0,
                    )
             
-        #sys.stdout.close()
-        #sys.stdout = original_stdout
+        sys.stdout.close()
+        sys.stdout = original_stdout
 
-print('==> The script is done, check (and enjoy) your images now')
+        print('==> The images for ms ' + my_vislist[i] +  ' in submosaic ' + str(my_submosaic) + ' are done, you can check (and enjoy) them now')
+        print('==> Check the log in ' + log_file)
