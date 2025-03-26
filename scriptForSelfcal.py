@@ -1000,7 +1000,7 @@ for i in range(0, len(my_vislist)):
                    )
         
         exportfits(imagename = my_imageFile + '.image', fitsimage = my_imageFile + '.fits', overwrite = True)
-        
+
         print('::: VOLS ::: ... Saving the model')
 
         print('::: VOLS ::: ... Splitting the pointings already self-calibrated')
@@ -1143,7 +1143,7 @@ for i in range(0, len(my_vislist)):
                     refantmode='strict',
                     solint='inf',
                     field=my_fields_str,
-                    spw=my_spw,
+                    spw=my_spws,
                     )
                 
             print("::: VOLS ::: ... applying calibration")

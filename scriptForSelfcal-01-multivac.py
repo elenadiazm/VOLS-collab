@@ -15,8 +15,8 @@ import glob
 
 # NOTE.- Change this in case you are running the script in a different server
 
-#my_dir = '/share/Part2/ediaz/VOLS/'     # multivac
-my_dir = '/home/VOLS/'                    # servervols
+my_dir = '/share/Part2/ediaz/VOLS/'     # multivac
+#my_dir = '/home/VOLS/'                    # servervols
 
 
 # User-defined parameters
@@ -1005,7 +1005,7 @@ for i in range(0, len(my_vislist)):
 
         print('::: VOLS ::: ... Splitting the pointings already self-calibrated')
 
-        selfcal_pointings = {'P10', 'P8', 'P9'} # REMOVE THIS AFTER USING IT
+        selfcal_pointings = {'P32', 'P96', 'P8', 'P73', 'P53', 'P112', 'P9', 'P54', 'P52', 'P94', 'P110', 'P95', 'P75', 'P10', 'P74', 'P97', 'P98', 'P51', 'P111', 'P76'} # REMOVE THIS AFTER USING IT
 
         my_selfcal_pointings_str = ",".join(selfcal_pointings)
 
