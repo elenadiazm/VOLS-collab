@@ -922,267 +922,267 @@ for i in range(0, len(my_vislist)):
         #            )
 
 
-        my_imageFile = my_dir + 'images/selfcal/bright_sources/VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
+        # my_imageFile = my_dir + 'images/selfcal/bright_sources/VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
 
-        os.system('cp -r ' + my_imageFile + '.image.tt0 .')
+        # os.system('cp -r ' + my_imageFile + '.image.tt0 .')
 
-        print('::: VOLS ::: ... Measuring the Median Absolute Deviation (MAD)')
+        # print('::: VOLS ::: ... Measuring the Median Absolute Deviation (MAD)')
 
-        selfcal_bright_sources_stats = imstat(imagename= my_imageFile +'.image.tt0')
-        mad = selfcal_bright_sources_stats['medabsdevmed'][0]
+        # selfcal_bright_sources_stats = imstat(imagename= my_imageFile +'.image.tt0')
+        # mad = selfcal_bright_sources_stats['medabsdevmed'][0]
 
-        print('==> MAD: '+ str(mad) + ' Jy/beam')
+        # print('==> MAD: '+ str(mad) + ' Jy/beam')
 
-        print('::: VOLS ::: ... Setting a threshold of MAD x 1.5 x 10, similar to a 10sigma threshold')
+        # print('::: VOLS ::: ... Setting a threshold of MAD x 1.5 x 10, similar to a 10sigma threshold')
 
-        threshold = mad*1.5*10
+        # threshold = mad*1.5*10
 
-        print('::: VOLS ::: ... Creating the mask for submosaic ' + str(my_submosaic) + ' using the self-calibrated image')
+        # print('::: VOLS ::: ... Creating the mask for submosaic ' + str(my_submosaic) + ' using the self-calibrated image')
 
-        os.system('mkdir -p ' + my_dir + 'masks/selfcal')
+        # os.system('mkdir -p ' + my_dir + 'masks/selfcal')
 
-        my_maskFile = my_dir + 'masks/selfcal/VOLS_selfcal_mask_10sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
+        # my_maskFile = my_dir + 'masks/selfcal/VOLS_selfcal_mask_10sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
 
-        os.system('rm -rf ' + my_maskFile + '.*')
+        # os.system('rm -rf ' + my_maskFile + '.*')
 
-        # NOTE.- not sure why but immath is not working if the image is not in the same directory.
+        # # NOTE.- not sure why but immath is not working if the image is not in the same directory.
 
-        immath(
-                    imagename='VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)  + '.image.tt0',
-                    expr='iif(IM0 >' + str(threshold) + ', 1.0, 0.0)',
-                    outfile=my_maskFile + '.mask'
-                )
+        # immath(
+        #             imagename='VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)  + '.image.tt0',
+        #             expr='iif(IM0 >' + str(threshold) + ', 1.0, 0.0)',
+        #             outfile=my_maskFile + '.mask'
+        #         )
 
-        os.system('rm -r VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)  + '.image.tt0')
+        # os.system('rm -r VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)  + '.image.tt0')
 
-        os.system('mkdir -p ' + my_dir + 'images/selfcal/bright_sources')
+        # os.system('mkdir -p ' + my_dir + 'images/selfcal/bright_sources')
 
-        my_imageFile = my_dir + 'images/selfcal/bright_sources/VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)+'_hogbom'
-        my_imageName = 'VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)+'_hogbom'
-        my_maskFile = my_dir + 'masks/selfcal/VOLS_selfcal_mask_10sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) 
+        # my_imageFile = my_dir + 'images/selfcal/bright_sources/VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)+'_hogbom'
+        # my_imageName = 'VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)+'_hogbom'
+        # my_maskFile = my_dir + 'masks/selfcal/VOLS_selfcal_mask_10sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) 
 
-        print('::: VOLS ::: ... Creating the self-calibrated image using hogbom and the mask at 10sigma')
+        # print('::: VOLS ::: ... Creating the self-calibrated image using hogbom and the mask at 10sigma')
 
-        os.system('rm -rf ' + my_imageFile + '.*')
+        # os.system('rm -rf ' + my_imageFile + '.*')
 
 
-        tclean(vis=my_visFile_selfcal,
-                   uvrange='>35klambda', # >100kl because we are using this image to create the mask
-                   datacolumn='corrected',
-                   spw=my_spws,
-                   field=my_submosaicData['my_submosaicPointings'][my_submosaic],
-                   phasecenter=my_submosaicData['my_submosaicPhaseCenter'][my_submosaic],
-                   imagename=my_imageFile,
-                   imsize=my_submosaicData['my_submosaicImsize'][my_submosaic],
-                   cell=['0.125arcsec'],
-                   stokes='I',
-                   specmode='mfs',
-                   gridder='mosaic',
-                   mosweight=False,
-                   usepointing=False,
-                   pblimit=0.1,
-                   deconvolver='hogbom',
-                   #nterms=2,
-                   restoration=True,
-                   pbcor=False,
-                   weighting='briggs',
-                   robust=0.5,
-                   npixels=0,
-                   niter=10000,
-                   usemask='user',
-                   mask=my_maskFile + '.mask',  # using now the mask created with the clean image
-                   threshold='0.1mJy',
-                   interactive=False,
-                   restart=False,
-                   savemodel='modelcolumn',
-                   calcres=True,
-                   calcpsf=True,
-                   parallel=False,
-                   pbmask=0.0,
-                   )
+        # tclean(vis=my_visFile_selfcal,
+        #            uvrange='>35klambda', # >100kl because we are using this image to create the mask
+        #            datacolumn='corrected',
+        #            spw=my_spws,
+        #            field=my_submosaicData['my_submosaicPointings'][my_submosaic],
+        #            phasecenter=my_submosaicData['my_submosaicPhaseCenter'][my_submosaic],
+        #            imagename=my_imageFile,
+        #            imsize=my_submosaicData['my_submosaicImsize'][my_submosaic],
+        #            cell=['0.125arcsec'],
+        #            stokes='I',
+        #            specmode='mfs',
+        #            gridder='mosaic',
+        #            mosweight=False,
+        #            usepointing=False,
+        #            pblimit=0.1,
+        #            deconvolver='hogbom',
+        #            #nterms=2,
+        #            restoration=True,
+        #            pbcor=False,
+        #            weighting='briggs',
+        #            robust=0.5,
+        #            npixels=0,
+        #            niter=10000,
+        #            usemask='user',
+        #            mask=my_maskFile + '.mask',  # using now the mask created with the clean image
+        #            threshold='0.1mJy',
+        #            interactive=False,
+        #            restart=False,
+        #            savemodel='modelcolumn',
+        #            calcres=True,
+        #            calcpsf=True,
+        #            parallel=False,
+        #            pbmask=0.0,
+        #            )
         
-        exportfits(imagename = my_imageFile + '.image', fitsimage = my_imageFile + '.fits', overwrite = True)
+        # exportfits(imagename = my_imageFile + '.image', fitsimage = my_imageFile + '.fits', overwrite = True)
         
-        print('::: VOLS ::: ... Saving the model')
+        # print('::: VOLS ::: ... Saving the model')
 
-        print('::: VOLS ::: ... Splitting the pointings already self-calibrated')
+        # print('::: VOLS ::: ... Splitting the pointings already self-calibrated')
 
-        selfcal_pointings = {'P10', 'P8', 'P9'} # REMOVE THIS AFTER USING IT
+        # selfcal_pointings = {'P10', 'P8', 'P9'} # REMOVE THIS AFTER USING IT
 
-        my_selfcal_pointings_str = ",".join(selfcal_pointings)
+        # my_selfcal_pointings_str = ",".join(selfcal_pointings)
 
-        os.system('rm -r ' + my_visFile + '.' + my_submosaic+'.SELFCAL.iter2')
+        # os.system('rm -r ' + my_visFile + '.' + my_submosaic+'.SELFCAL.iter2')
 
-        split(vis = my_visFile_selfcal,
-                outputvis = my_visFile + '.' + my_submosaic+'.SELFCAL.iter2', # This dataset contains ONLY the pointings that are already self-calibrated (spw by spw, during the first iteration)
-                field = my_selfcal_pointings_str,
-                datacolumn = 'corrected')
+        # split(vis = my_visFile_selfcal,
+        #         outputvis = my_visFile + '.' + my_submosaic+'.SELFCAL.iter2', # This dataset contains ONLY the pointings that are already self-calibrated (spw by spw, during the first iteration)
+        #         field = my_selfcal_pointings_str,
+        #         datacolumn = 'corrected')
         
 
-        print('::: VOLS ::: ... Running pyBDSF on the self-calibrated image')
+        # print('::: VOLS ::: ... Running pyBDSF on the self-calibrated image')
 
-        my_imageFits = my_imageFile + '.fits' 
+        # my_imageFits = my_imageFile + '.fits' 
 
-        print('==> Processing '+ my_imageFits)
+        # print('==> Processing '+ my_imageFits)
 
-        # Run PyBDSF with the specified parameters
+        # # Run PyBDSF with the specified parameters
 
-        img = bdsf.process_image(my_imageFits,
-                             adaptive_rms_box=True,
-                             thresh_isl=10.0,
-                             thresh_pix=10.0)
+        # img = bdsf.process_image(my_imageFits,
+        #                      adaptive_rms_box=True,
+        #                      thresh_isl=10.0,
+        #                      thresh_pix=10.0)
     
 
-        my_catalog = my_dir + 'data/' + my_imageName  + '_10sigma_catalog.csv'
+        # my_catalog = my_dir + 'data/' + my_imageName  + '_10sigma_catalog.csv'
         
-        os.system('rm -r ' + my_catalog)
+        # os.system('rm -r ' + my_catalog)
 
-        # Write the source catalog
+        # # Write the source catalog
 
-        img.write_catalog(outfile=my_catalog,
-                    catalog_type = 'srl',
-                    format = 'csv') 
+        # img.write_catalog(outfile=my_catalog,
+        #             catalog_type = 'srl',
+        #             format = 'csv') 
 
-        print('::: VOLS ::: ... Finishing pyBDSF')
+        # print('::: VOLS ::: ... Finishing pyBDSF')
 
-        print('==> You can check the catalog at 10sigma in ' + my_dir + 'data/' + my_imageName + '_10sigma_catalog.csv')
+        # print('==> You can check the catalog at 10sigma in ' + my_dir + 'data/' + my_imageName + '_10sigma_catalog.csv')
 
-        column_names = [ "Source_id", "Isl_id", "RA", "E_RA", "DEC", "E_DEC", "Total_flux", "E_Total_flux", "Peak_flux", 
-                        "E_Peak_flux", "RA_max", "E_RA_max", "DEC_max", "E_DEC_max", "Maj", "E_Maj","Min", "E_Min", "PA", 
-                        "E_PA", "Maj_img_plane", "E_Maj_img_plane", "Min_img_plane","E_Min_img_plane", "PA_img_plane", 
-                        "E_PA_img_plane", "DC_Maj", "E_DC_Maj", "DC_Min","E_DC_Min", "DC_PA", "E_DC_PA", "DC_Maj_img_plane", 
-                        "E_DC_Maj_img_plane", "DC_Min_img_plane","E_DC_Min_img_plane", "DC_PA_img_plane", "E_DC_PA_img_plane", 
-                        "Isl_Total_flux", "E_Isl_Total_flux", "Isl_rms", "Isl_mean", "Resid_Isl_rms", "Resid_Isl_mean", "S_Code"
-                        ]
+        # column_names = [ "Source_id", "Isl_id", "RA", "E_RA", "DEC", "E_DEC", "Total_flux", "E_Total_flux", "Peak_flux", 
+        #                 "E_Peak_flux", "RA_max", "E_RA_max", "DEC_max", "E_DEC_max", "Maj", "E_Maj","Min", "E_Min", "PA", 
+        #                 "E_PA", "Maj_img_plane", "E_Maj_img_plane", "Min_img_plane","E_Min_img_plane", "PA_img_plane", 
+        #                 "E_PA_img_plane", "DC_Maj", "E_DC_Maj", "DC_Min","E_DC_Min", "DC_PA", "E_DC_PA", "DC_Maj_img_plane", 
+        #                 "E_DC_Maj_img_plane", "DC_Min_img_plane","E_DC_Min_img_plane", "DC_PA_img_plane", "E_DC_PA_img_plane", 
+        #                 "Isl_Total_flux", "E_Isl_Total_flux", "Isl_rms", "Isl_mean", "Resid_Isl_rms", "Resid_Isl_mean", "S_Code"
+        #                 ]
         
-        my_catalog_df = pd.read_csv(my_catalog, comment='#', names=column_names)
+        # my_catalog_df = pd.read_csv(my_catalog, comment='#', names=column_names)
 
-        coords_deg = SkyCoord(ra=my_catalog_df['RA'].values * u.degree, dec=my_catalog_df['DEC'].values * u.degree, frame='icrs')
+        # coords_deg = SkyCoord(ra=my_catalog_df['RA'].values * u.degree, dec=my_catalog_df['DEC'].values * u.degree, frame='icrs')
 
-        my_catalog_df['RA_hour_angle'] = coords_deg.ra.to_string(unit=u.hourangle, sep=':', precision=2, pad = True)
-        my_catalog_df['DEC_degree'] = coords_deg.dec.to_string(unit=u.degree, sep=':', precision=2, pad=True)
+        # my_catalog_df['RA_hour_angle'] = coords_deg.ra.to_string(unit=u.hourangle, sep=':', precision=2, pad = True)
+        # my_catalog_df['DEC_degree'] = coords_deg.dec.to_string(unit=u.degree, sep=':', precision=2, pad=True)
     
 
-        error_coords = SkyCoord(ra=my_catalog_df['E_RA'].values * u.degree, dec=my_catalog_df['E_DEC'].values * u.degree, frame='icrs')
-        my_catalog_df['E_RA_hour_angle'] = error_coords.ra.to_string(unit=u.hourangle, sep=':', precision=4, pad=True)
-        my_catalog_df['E_DEC_degree'] = error_coords.dec.to_string(unit=u.degree, sep=':', precision=4, pad=True)
+        # error_coords = SkyCoord(ra=my_catalog_df['E_RA'].values * u.degree, dec=my_catalog_df['E_DEC'].values * u.degree, frame='icrs')
+        # my_catalog_df['E_RA_hour_angle'] = error_coords.ra.to_string(unit=u.hourangle, sep=':', precision=4, pad=True)
+        # my_catalog_df['E_DEC_degree'] = error_coords.dec.to_string(unit=u.degree, sep=':', precision=4, pad=True)
 
-        print('::: VOLS ::: ... Checking the pointings that contain each source')
+        # print('::: VOLS ::: ... Checking the pointings that contain each source')
 
-        listobs = pd.read_csv('vols-listobs-cband.csv', sep=';', header=0) # NOTE.- NEED TO ADD THIS TO EACH SERVER
+        # listobs = pd.read_csv('vols-listobs-cband.csv', sep=';', header=0) # NOTE.- NEED TO ADD THIS TO EACH SERVER
 
-        coords = SkyCoord(ra=listobs['RA'], dec=listobs['Decl'], unit=(u.hourangle, u.deg))
+        # coords = SkyCoord(ra=listobs['RA'], dec=listobs['Decl'], unit=(u.hourangle, u.deg))
 
-        my_catalog_df['pointings'] = [[] for _ in range(len(my_catalog_df))]
+        # my_catalog_df['pointings'] = [[] for _ in range(len(my_catalog_df))]
 
-        for index, row in my_catalog_df.iterrows():
+        # for index, row in my_catalog_df.iterrows():
     
-            my_source = SkyCoord(row['RA_hour_angle'], row['DEC_degree'], unit=(u.hourangle, u.deg))
+        #     my_source = SkyCoord(row['RA_hour_angle'], row['DEC_degree'], unit=(u.hourangle, u.deg))
 
-            points_in_region = []
+        #     points_in_region = []
             
-            for k, coord in enumerate(coords):
-                # Calculate the separation between the current pointing and the target
-                separation = coord.separation(my_source)
+        #     for k, coord in enumerate(coords):
+        #         # Calculate the separation between the current pointing and the target
+        #         separation = coord.separation(my_source)
 
-                # If the separation is within the beam radius, add to points_in_region
-                if separation <= beam_radius * u.deg:
-                    points_in_region.append(listobs.iloc[k]['Name']) # storing as a list
+        #         # If the separation is within the beam radius, add to points_in_region
+        #         if separation <= beam_radius * u.deg:
+        #             points_in_region.append(listobs.iloc[k]['Name']) # storing as a list
 
-            my_catalog_df.at[index, 'pointings'] = points_in_region 
+        #     my_catalog_df.at[index, 'pointings'] = points_in_region 
 
-        my_catalog_df.sort_values(by=['Peak_flux'], ascending=False, inplace=True) # Sorting from higher value to lower value of the peak flux
+        # my_catalog_df.sort_values(by=['Peak_flux'], ascending=False, inplace=True) # Sorting from higher value to lower value of the peak flux
 
-        my_catalog_df.to_csv(my_catalog, index=False)
+        # my_catalog_df.to_csv(my_catalog, index=False)
 
-        for index,row in my_catalog_df.iterrows():
+        # for index,row in my_catalog_df.iterrows():
 
-            my_pointings = row['pointings']  # Get the pointings of each bright source
-            #pointings = set(my_pointings.split(",")) 
-            pointings = set(my_pointings) 
+        #     my_pointings = row['pointings']  # Get the pointings of each bright source
+        #     #pointings = set(my_pointings.split(",")) 
+        #     pointings = set(my_pointings) 
     
-            new_pointings = pointings - selfcal_pointings  # Exclude existing pointings
+        #     new_pointings = pointings - selfcal_pointings  # Exclude existing pointings
 
-            if not new_pointings: 
+        #     if not new_pointings: 
 
-                print('==> No pointings found to perform self-calibration')
+        #         print('==> No pointings found to perform self-calibration')
 
-                continue # this will skip to the next iteration of the index,row in bright_sources_df.iterrows() loop
+        #         continue # this will skip to the next iteration of the index,row in bright_sources_df.iterrows() loop
 
-            print('::: VOLS ::: ... The pointings ' + str(new_pointings) + ' are going to be self-calibrated')
+        #     print('::: VOLS ::: ... The pointings ' + str(new_pointings) + ' are going to be self-calibrated')
     
-            my_fields = ",".join(new_pointings)
+        #     my_fields = ",".join(new_pointings)
 
-            my_fields_str = ",".join(new_pointings)# TO BE WRITTEN LIKE 'P8,P9,P10'
-            my_fields_join = "".join(new_pointings) # TO BE WRITTEN LIKE P8P9P10
+        #     my_fields_str = ",".join(new_pointings)# TO BE WRITTEN LIKE 'P8,P9,P10'
+        #     my_fields_join = "".join(new_pointings) # TO BE WRITTEN LIKE P8P9P10
 
-            selfcal_pointings.update(new_pointings)  # Add new pointings to the set
+        #     selfcal_pointings.update(new_pointings)  # Add new pointings to the set
 
-            print('::: VOLS ::: ... Splitting the visibility ' + my_vislist[i])
+        #     print('::: VOLS ::: ... Splitting the visibility ' + my_vislist[i])
 
-            os.system('rm -r ' + my_visFile+'.'+ my_submosaic + '.' +my_fields_join+'.iter2')
+        #     os.system('rm -r ' + my_visFile+'.'+ my_submosaic + '.' +my_fields_join+'.iter2')
 
-            split(vis=my_visFile, 
-              outputvis=my_visFile+'.'+ my_submosaic + '.' +my_fields_join+'.iter2', # NOTE. This will ony
-              field=my_fields_str,
-              datacolumn = 'data')
+        #     split(vis=my_visFile, 
+        #       outputvis=my_visFile+'.'+ my_submosaic + '.' +my_fields_join+'.iter2', # NOTE. This will ony
+        #       field=my_fields_str,
+        #       datacolumn = 'data')
             
-            my_visFile_submosaic = my_visFile+'.'+ my_submosaic + '.' +my_fields_join+'.iter2'
+        #     my_visFile_submosaic = my_visFile+'.'+ my_submosaic + '.' +my_fields_join+'.iter2'
             
-            print('::: VOLS ::: ... The measurement set ' + my_visFile+'.'+ my_submosaic + '.' +my_fields_join+'.iter2 has been created')
+        #     print('::: VOLS ::: ... The measurement set ' + my_visFile+'.'+ my_submosaic + '.' +my_fields_join+'.iter2 has been created')
 
-            print('::: VOLS ::: ... Starting self-calibration in phase using the model with all the spws')
+        #     print('::: VOLS ::: ... Starting self-calibration in phase using the model with all the spws')
 
-            my_caltable = my_dir+'calibration-tables/caltable_'+str(my_dates[i])+'_'+ str(my_submosaic) +'_'+ my_fields_join + '_'+ my_calmode + '.tb'
+        #     my_caltable = my_dir+'calibration-tables/caltable_'+str(my_dates[i])+'_'+ str(my_submosaic) +'_'+ my_fields_join + '_'+ my_calmode + '.tb'
 
-            print("::: VOLS ::: ... gaincal for self-calibration")
+        #     print("::: VOLS ::: ... gaincal for self-calibration")
 
-            gaincal(
-                    vis=my_visFile_submosaic,
-                    caltable=my_caltable,
-                    uvrange='',  # no restrictions in the uvrange
-                    gaintype='G',
-                    calmode=my_calmode,
-                    refant='ea10,ea23,ea28',
-                    minsnr=4,
-                    refantmode='strict',
-                    solint='inf',
-                    field=my_fields_str,
-                    spw=my_spws,
-                    )
+        #     gaincal(
+        #             vis=my_visFile_submosaic,
+        #             caltable=my_caltable,
+        #             uvrange='',  # no restrictions in the uvrange
+        #             gaintype='G',
+        #             calmode=my_calmode,
+        #             refant='ea10,ea23,ea28',
+        #             minsnr=4,
+        #             refantmode='strict',
+        #             solint='inf',
+        #             field=my_fields_str,
+        #             spw=my_spws,
+        #             )
                 
-            print("::: VOLS ::: ... applying calibration")
+        #     print("::: VOLS ::: ... applying calibration")
 
-            applycal(
-                    vis=my_visFile_submosaic,
-                    uvrange='',
-                    gaintable=my_caltable,
-                    interp='linear',
-                    applymode='calonly',
-                    field=my_fields_str,
-                    )
+        #     applycal(
+        #             vis=my_visFile_submosaic,
+        #             uvrange='',
+        #             gaintable=my_caltable,
+        #             interp='linear',
+        #             applymode='calonly',
+        #             field=my_fields_str,
+        #             )
         
-        not_selfcal_pointings = all_pointings - selfcal_pointings
-        not_selfcal_pointings_str = ",".join(not_selfcal_pointings)
+        # not_selfcal_pointings = all_pointings - selfcal_pointings
+        # not_selfcal_pointings_str = ",".join(not_selfcal_pointings)
 
-        my_visFile_NOselfcal_final = my_visFile+ '.' + my_submosaic + '.NOselfcal.iter2'
+        # my_visFile_NOselfcal_final = my_visFile+ '.' + my_submosaic + '.NOselfcal.iter2'
 
-        os.system('rm -r ' + my_visFile_NOselfcal_final)
+        # os.system('rm -r ' + my_visFile_NOselfcal_final)
 
-        split(vis=my_visFile_NOselfcal, 
-              outputvis=my_visFile_NOselfcal_final, # NOTE.-  NEED TO CHECK HOW THIS IS WRITTEN
-              field=not_selfcal_pointings_str,
-              datacolumn = 'data')
+        # split(vis=my_visFile_NOselfcal, 
+        #       outputvis=my_visFile_NOselfcal_final, # NOTE.-  NEED TO CHECK HOW THIS IS WRITTEN
+        #       field=not_selfcal_pointings_str,
+        #       datacolumn = 'data')
         
-        points_to_concat = glob.glob(my_visFile + '.' + my_submosaic + "*.iter2") # NOTE.- This way, we concat the measurement sets of the submosaics that have been self-calibrated in the second round 
+        # points_to_concat = glob.glob(my_visFile + '.' + my_submosaic + "*.iter2") # NOTE.- This way, we concat the measurement sets of the submosaics that have been self-calibrated in the second round 
 
-        print('::: VOLS ::: ... Measurement sets to concatenate: ' + str(points_to_concat))
+        # print('::: VOLS ::: ... Measurement sets to concatenate: ' + str(points_to_concat))
 
         my_visFile_final = my_visFile + '.' + my_submosaic+'.SELFCAL.FINAL' # NO! we have to concatenate also the self-calibrated points!!
 
-        os.system('rm -r '+ my_visFile_final)
+        # os.system('rm -r '+ my_visFile_final)
 
-        concat(vis = points_to_concat, concatvis = my_visFile_final)
+        # concat(vis = points_to_concat, concatvis = my_visFile_final)
 
         my_imageFile = my_dir + 'images/selfcal/final/VOLS_selfcal_final_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) +'_'+ my_calmode
         my_maskFile = my_dir + 'masks/selfcal/VOLS_selfcal_mask_10sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) 
