@@ -12,13 +12,16 @@ from astropy.coordinates import SkyCoord
 import astropy.units as u  
 import bdsf
 import glob
+import tarfile
 
 # NOTE.- Change this in case you are running the script in a different server
 
 my_dir = '/share/Part2/ediaz/VOLS/'     # multivac
 #my_dir = '/home/VOLS/'                    # servervols
 
-my_dir_ms = 'CALIBRATED_CONTINUUM/'
+my_dir_ms =  my_dir + 'CALIBRATED_CONTINUUM/'
+
+delete_products = False
 
 
 # Parameters to sort the spectral windows by frequency
@@ -45,41 +48,45 @@ beam_radius = (theta_pb / 60) / 2  # beam radius in degrees
 
 # Measurement sets to image
 
-my_visFileBaseName = ['22A-195.sb41668223.eb41752682.59672.87566575232_cont',
-'22A-195.sb41668223.eb41756347.59679.919291342594_cont',
-'22A-195.sb41668223.eb41763155.59682.964581215274_cont',
-'22A-195.sb41668223.eb41771911.59684.805362025465_cont',
-'22A-195.sb41668223.eb41774359.59688.783021979165_cont',
-'22A-195.sb41668223.eb41776239.59690.95766400463_cont',
-'22A-195.sb41668223.eb41784557.59692.92574443287_cont',
-'22A-195.sb41668223.eb41784722.59693.823116562504_cont',
-'22A-195.sb41668223.eb41784724.59693.95610815972_cont',
-'22A-195.sb41668223.eb41785635.59695.81217344907_cont',
-'22A-195.sb41668223.eb41788325.59698.93521715278_cont',
-'22A-195.sb41668223.eb41788343.59699.900189837965_cont',
-'22A-195.sb41668223.eb41788359.59700.754512060186_cont',
-'22A-195.sb41668223.eb41788361.59700.88744737269_cont',
-'22A-195.sb41668223.eb41788874.59701.92147296296_cont',
-'22A-195.sb41668223.eb41789898.59702.90341413194_cont',
-'22A-195.sb41668223.eb41815091.59721.7578799537_cont',
-'22A-195.sb41668223.eb41818503.59723.85374815972_cont',
-'22A-195.sb41668223.eb41837135.59733.80435298611_cont',
-'22A-195.sb41668223.eb41838351.59734.75052173611_cont',
-'22A-195.sb41668223.eb41842850.59737.742964062505_cont',
-'22A-195.sb41668223.eb41848883.59740.76904108796_cont',
-'22A-195.sb41668223.eb41849717.59741.79960082176_cont',
-'22A-195.sb41668223.eb41852333.59744.63347153935_cont',
-'22A-195.sb41668223.eb41852443.59744.76640462963_cont',
-'22A-195.sb41668223.eb41905952.59761.608695324074_cont']
+# my_visFileBaseName = ['22A-195.sb41668223.eb41752682.59672.87566575232_cont',
+# '22A-195.sb41668223.eb41756347.59679.919291342594_cont',
+# '22A-195.sb41668223.eb41763155.59682.964581215274_cont',
+# '22A-195.sb41668223.eb41771911.59684.805362025465_cont',
+# '22A-195.sb41668223.eb41774359.59688.783021979165_cont',
+# '22A-195.sb41668223.eb41776239.59690.95766400463_cont',
+# '22A-195.sb41668223.eb41784557.59692.92574443287_cont',
+# '22A-195.sb41668223.eb41784722.59693.823116562504_cont',
+# '22A-195.sb41668223.eb41784724.59693.95610815972_cont',
+# '22A-195.sb41668223.eb41785635.59695.81217344907_cont',
+# '22A-195.sb41668223.eb41788325.59698.93521715278_cont',
+# '22A-195.sb41668223.eb41788343.59699.900189837965_cont',
+# '22A-195.sb41668223.eb41788359.59700.754512060186_cont',
+# '22A-195.sb41668223.eb41788361.59700.88744737269_cont',
+# '22A-195.sb41668223.eb41788874.59701.92147296296_cont',
+# '22A-195.sb41668223.eb41789898.59702.90341413194_cont',
+# '22A-195.sb41668223.eb41815091.59721.7578799537_cont',
+# '22A-195.sb41668223.eb41818503.59723.85374815972_cont',
+# '22A-195.sb41668223.eb41837135.59733.80435298611_cont',
+# '22A-195.sb41668223.eb41838351.59734.75052173611_cont',
+# '22A-195.sb41668223.eb41842850.59737.742964062505_cont',
+# '22A-195.sb41668223.eb41848883.59740.76904108796_cont',
+# '22A-195.sb41668223.eb41849717.59741.79960082176_cont',
+# '22A-195.sb41668223.eb41852333.59744.63347153935_cont',
+# '22A-195.sb41668223.eb41852443.59744.76640462963_cont',
+# '22A-195.sb41668223.eb41905952.59761.608695324074_cont']
+
+my_visFileBaseName = ['22A-195.sb41668223.eb41788359.59700.754512060186_cont']
 
 my_vislist = [basename + '.ms' for basename in my_visFileBaseName]
 
 my_dates = ['20220403','20220410','20220413','20220415','20220419','20220421','20220423','20220424a','20220424b','20220426','20220429','20220430',
        '20220501a','20220501b','20220502','20220503','20220522','20220524','20220603','20220604','20220607', '20220610','20220611','20220614a','20220614b','20220701']
 
+my_dates = ['20220501a']
+
 # Submosaics to image
 
-my_submosaics = ['01']
+my_submosaics = ['00','01','02']
 
 # CLEANing is split into different submosaics
 
@@ -130,7 +137,7 @@ for i in range(0, len(my_vislist)):
 
     os.system('rm -rf ' + my_dir + 'CALIBRATED_CONTINUUM_SPW_ORDERED/' + my_vislist[i])
 
-    split(vis =  my_dir + my_dir_ms + my_vislist[i], outputvis = my_dir + 'CALIBRATED_CONTINUUM_SPW_ORDERED/' + my_vislist[i],
+    split(vis =  my_dir_ms + my_vislist[i], outputvis = my_dir + 'CALIBRATED_CONTINUUM_SPW_ORDERED/' + my_vislist[i],
         field = fld,
         datacolumn = 'data',
         spw = win,
@@ -155,7 +162,11 @@ for i in range(0, len(my_vislist)):
         selfcal_pointings = set()  # Setting unique values for the self-calibrated pointings -- ON EACH SUBMOSAIC ! -- I know this cant be efficient if we have a source on a pointing that is in submosaic '00' and '01' for example,
                                    # but i am not sure how to take into account the pointings that are self-calibrated in other submosaics
 
+        my_submosaic_pointings = set(my_submosaicData['my_submosaicPointings'][my_submosaic].split(','))
+
         print('::: VOLS ::: ... Submosaic ' + str(my_submosaic) + ' centered at ' + str(my_submosaicData['my_submosaicPhaseCenter'][my_submosaic]))
+
+        print('==> Pointings in submosaic ' + str(my_submosaic) + ': ' + str(my_submosaic_pointings))
 
         my_spws = '2~31' # NOTE.- Use this in case your spw's are sorted by frequency (see script-order-spw.py)
 
@@ -814,18 +825,20 @@ for i in range(0, len(my_vislist)):
                 if rms > 5e-4:
                     print("WARNING !!  The rms is larger than expected. Check you images carefully !")
             
-            print('::: VOLS ::: ... Each spectral window has been calibrated individually for the pointings ' +  my_fields_str + '. You can check the images now')
+            print('::: VOLS ::: ... Each spectral window has been calibrated individually for the pointings ' +  my_fields_str + '. You can check the images now')  
         
         print('::: VOLS ::: ... Self-calibration of the brightest sources is finished')
 
-        print('::: VOLS ::: ... Pointings self-calibrated: ' + str(selfcal_pointings)) # not sure how is this variable written
+        print('==> Pointings in submosaic ' + str(my_submosaic) + ': ' + str(my_submosaic_pointings)) 
+
+        print('==> Pointings self-calibrated ' + str(my_submosaic) + ': ' + str(selfcal_pointings)) 
+
+        print('==> Pointings not self-calibrated ' + str(my_submosaic) + ': ' + str(my_submosaic_pointings - selfcal_pointings))
 
         # NOTE.- The self-calibrated measurement sets are written like 22A-195.sb41668223.eb41752682.59672.87566575232_cont.ms.(POINTINGSSELFCAL).iter1
 
-        not_selfcal_pointings = all_pointings - selfcal_pointings
+        not_selfcal_pointings = all_pointings - selfcal_pointings # This includes all the not-selfcalibrated pointings (in different submosaics)
         not_selfcal_pointings_str = ",".join(not_selfcal_pointings)
-
-        print('::: VOLS ::: ... Pointings not self-calibrated: ' + str(not_selfcal_pointings))
 
         my_visFile_NOselfcal = my_visFile+ '.' + my_submosaic + '.NOselfcal.iter1'
 
@@ -1183,7 +1196,13 @@ for i in range(0, len(my_vislist)):
                     applymode='calonly',
                     field=my_fields_str,
                     )
-        
+
+        print('==> Pointings in submosaic ' + str(my_submosaic) + ': ' + str(my_submosaic_pointings)) 
+
+        print('==> Pointings self-calibrated ' + str(my_submosaic) + ': ' + str(selfcal_pointings)) 
+
+        print('==> Pointings not self-calibrated ' + str(my_submosaic) + ': ' + str(my_submosaic_pointings - selfcal_pointings))
+
         not_selfcal_pointings = all_pointings - selfcal_pointings
         not_selfcal_pointings_str = ",".join(not_selfcal_pointings)
 
@@ -1292,8 +1311,41 @@ for i in range(0, len(my_vislist)):
                    pbmask=0.0,
                    )
             
+        if delete_products:
+
+            print('::: VOLS ::: ... Deleting dirty images generated spw by spw')
+            os.system('rm -r ' + my_dir + 'images/each_spw/dirty')
+
+            print('::: VOLS ::: ... Deleting dirty images combining all spws')
+            os.system('rm -r ' + my_dir + 'images/dirty' )
+
+            print('::: VOLS ::: ... Deleting selfcal images with the bright sources')
+            os.system('rm -r ' + my_dir + 'images/selfcal/bright_sources')
+
+            print('::: VOLS ::: Deleting intermediate measurement sets')
+
+            os.system('rm -r ' + my_dir + 'CALIBRATED_CONTINUUM_SPW_ORDERED/*.iter1')
+            os.system('rm -r ' + my_dir + 'CALIBRATED_CONTINUUM_SPW_ORDERED/*.iter2') 
+
+            
         sys.stdout.close()
         sys.stdout = original_stdout
 
         print('==> The images for ms ' + my_vislist[i] +  ' in submosaic ' + str(my_submosaic) + ' are done, you can check (and enjoy) them now')
         print('==> Check the log in ' + log_file)
+    
+    tar_file = my_visFile + '.tar'
+
+    with tarfile.open(tar_file, 'w') as tar:
+        
+        tar.add(my_visFile, arcname=my_vislist[i])
+
+    print('The measurement set is saved as:', tar_file)
+
+    # shutil.rmtree(my_visFile)
+    # print('Removed:', my_visFile)
+
+
+
+
+        
