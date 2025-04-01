@@ -2,7 +2,7 @@
 # First self-calibration is performed spw by spw on the pointings that contain bright sources
 # Second self-calibration is performed (combining all spws) on the pointings that contain sources at 10sigma
 
-# Last update 2025.03 .- Elena Díaz-Márquez
+# Last update 2025.04 .- Elena Díaz-Márquez
 
 import os
 import sys
@@ -14,6 +14,19 @@ import bdsf
 import glob
 import tarfile
 import shutil
+
+class Logger(object):
+    def __init__(self, *files):
+        self.files = files
+
+    def write(self, message):
+        for f in self.files:
+            f.write(message)
+            f.flush()  # Force flush to see real-time output
+
+    def flush(self):
+        for f in self.files:
+            f.flush()
 
 # NOTE.- Change this in case you are running the script in a different server
 
@@ -161,8 +174,8 @@ for i in range(0, len(my_vislist)):
 
     log_file =  my_dir +  'logs/' + 'imagin-selfcal.' + str(my_dates[i]) + '.log'
 
-    original_stdout = sys.stdout
-    sys.stdout = open(log_file,'w') # in order to save the printed messages in a log file
+    log_fh = open(log_file, 'w')
+    sys.stdout = Logger(sys.stdout, log_fh)
 
     print('::: VOLS ::: ... Processing the measurement set ' + my_vislist[i])
 
@@ -1398,12 +1411,6 @@ for i in range(0, len(my_vislist)):
             os.system('rm -r ' + my_dir + 'CALIBRATED_CONTINUUM_SPW_ORDERED/*.iter2') 
 
         print('==> The images for ms ' + my_vislist[i] +  ' in submosaic ' + str(my_submosaic) + ' are done, you can check (and enjoy) them now')
-        
-    
-    sys.stdout.close()
-    sys.stdout = original_stdout
-
-    print('==> Check the log in ' + log_file)
 
     tar_file = my_visFile + '.tar'
 
@@ -1425,6 +1432,9 @@ for i in range(0, len(my_vislist)):
 
     shutil.rmtree(my_visFile_final)
     print('Removed:', my_visFile_final) 
+    print('==> Check the log in ' + log_file)
+
+    log_fh.close()
 
 
 
