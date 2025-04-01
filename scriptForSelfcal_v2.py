@@ -1397,13 +1397,14 @@ for i in range(0, len(my_vislist)):
             os.system('rm -r ' + my_dir + 'CALIBRATED_CONTINUUM_SPW_ORDERED/*.iter1')
             os.system('rm -r ' + my_dir + 'CALIBRATED_CONTINUUM_SPW_ORDERED/*.iter2') 
 
-            
+        print('==> The images for ms ' + my_vislist[i] +  ' in submosaic ' + str(my_submosaic) + ' are done, you can check (and enjoy) them now')
+        
+    
     sys.stdout.close()
     sys.stdout = original_stdout
 
-        print('==> The images for ms ' + my_vislist[i] +  ' in submosaic ' + str(my_submosaic) + ' are done, you can check (and enjoy) them now')
-        print('==> Check the log in ' + log_file)
-    
+    print('==> Check the log in ' + log_file)
+
     tar_file = my_visFile + '.tar'
 
     with tarfile.open(tar_file, 'w') as tar:
