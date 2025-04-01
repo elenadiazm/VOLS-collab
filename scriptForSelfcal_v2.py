@@ -100,14 +100,14 @@ def add_pointings_column(source_df, listobs, beam_radius):
 # '22A-195.sb41668223.eb41852443.59744.76640462963_cont',
 # '22A-195.sb41668223.eb41905952.59761.608695324074_cont']
 
-my_visFileBaseName = ['22A-195.sb41668223.eb41788359.59700.754512060186_cont']
+my_visFileBaseName = ['22A-195.sb41668223.eb41905952.59761.608695324074_cont']
 
 my_vislist = [basename + '.ms' for basename in my_visFileBaseName]
 
 my_dates = ['20220403','20220410','20220413','20220415','20220419','20220421','20220423','20220424a','20220424b','20220426','20220429','20220430',
        '20220501a','20220501b','20220502','20220503','20220522','20220524','20220603','20220604','20220607', '20220610','20220611','20220614a','20220614b','20220701']
 
-my_dates = ['20220501a']
+my_dates = ['20220701']
 
 # Submosaics to image
 
@@ -543,6 +543,16 @@ for i in range(0, len(my_vislist)):
     
             new_pointings = pointings - selfcal_pointings  # Exclude existing pointings
 
+            num_pointings = len(new_pointings)
+
+            # Defining the size of the image in function of the number of pointings
+
+            if  num_pointings <= 5:
+
+                my_imsize = [6720, 6720]  # para pocos pointings
+            else:
+                my_imsize = [10080, 10080]  # para mosaico más grande
+
             if not new_pointings: 
 
                 print('==> No new pointings found to perform self-calibration')
@@ -601,7 +611,7 @@ for i in range(0, len(my_vislist)):
                         field = my_fields_str, # NOTE.- Actually, it would not be necessary since in the measurement set there are only those pointings
                         phasecenter = '',
                         imagename = my_imageFile,
-                        imsize = [8250,8250],
+                        imsize = my_imsize,
                         cell = ['0.125arcsec'],
                         stokes = 'I',
                         specmode = 'mfs',
@@ -691,7 +701,7 @@ for i in range(0, len(my_vislist)):
                         field = my_fields_str,
                         phasecenter = '',
                         imagename = my_imageFile,
-                        imsize = [8250,8250],
+                        imsize = my_imsize,
                         cell = ['0.125arcsec'],
                         stokes = 'I',
                         specmode = 'mfs',
@@ -817,7 +827,7 @@ for i in range(0, len(my_vislist)):
                    field=my_fields_str,
                    phasecenter='',
                    imagename=my_imageFile,
-                   imsize=[8250,8250],
+                   imsize=my_imsize,
                    cell=['0.125arcsec'],
                    stokes='I',
                    specmode='mfs',
