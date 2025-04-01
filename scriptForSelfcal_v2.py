@@ -257,7 +257,7 @@ for i in range(0, len(my_vislist)):
 
         print('::: VOLS ::: ... Setting a threshold of 80 percent of the peak')
 
-        threshold = 0.8 * peak
+        threshold = 0.8 * dirty_peak
 
         print('==> Threshold: '+ str(threshold) + ' Jy/beam')
 
@@ -341,7 +341,7 @@ for i in range(0, len(my_vislist)):
 
         print('::: VOLS ::: ... Setting a threshold of MAD x 1.5 x 20, similar to a 30sigma threshold')
 
-        threshold = mad*1.5*30
+        threshold = shallow_clean_mad*1.5*30
 
         print('==> Threshold: '+ str(threshold) + ' Jy/beam')
 
@@ -1398,8 +1398,8 @@ for i in range(0, len(my_vislist)):
             os.system('rm -r ' + my_dir + 'CALIBRATED_CONTINUUM_SPW_ORDERED/*.iter2') 
 
             
-        sys.stdout.close()
-        sys.stdout = original_stdout
+    sys.stdout.close()
+    sys.stdout = original_stdout
 
         print('==> The images for ms ' + my_vislist[i] +  ' in submosaic ' + str(my_submosaic) + ' are done, you can check (and enjoy) them now')
         print('==> Check the log in ' + log_file)
