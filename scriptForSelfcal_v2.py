@@ -352,7 +352,7 @@ for i in range(0, len(my_vislist)):
         print('==> MAD: '+ str(shallow_clean_mad) + ' Jy/beam')
         print('==> rms: '+ str(shallow_clean_rms) + ' Jy/beam')
 
-        print('::: VOLS ::: ... Setting a threshold of MAD x 1.5 x 20, similar to a 30sigma threshold')
+        print('::: VOLS ::: ... Setting a threshold of MAD x 1.5 x 30, similar to a 30sigma threshold')
 
         threshold = shallow_clean_mad*1.5*30
 
@@ -500,7 +500,7 @@ for i in range(0, len(my_vislist)):
 
         # Compute (S/N)_self condition
 
-        my_catalog_df['snr_self'] = (my_catalog_df['Peak_flux'] / rms) * (1/np.sqrt(n_ant - 3)) * (1/np.sqrt(t_exp/t_int))
+        my_catalog_df['snr_self'] = (my_catalog_df['Peak_flux'] / clean_rms) * (1/np.sqrt(n_ant - 3)) * (1/np.sqrt(t_exp/t_int))
 
         coords_deg = SkyCoord(ra=my_catalog_df['RA'].values * u.degree, dec=my_catalog_df['DEC'].values * u.degree, frame='icrs')
 
