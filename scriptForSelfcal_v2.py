@@ -75,7 +75,7 @@ def add_pointings_column(source_df, listobs, beam_radius):
 
     # Crea una lista de listas con los pointings cercanos
     all_pointings = [
-        listobs_df['Name'][separations[i] <= beam_radius * u.deg].tolist()
+        listobs['Name'][separations[i] <= beam_radius * u.deg].tolist()
         for i in range(len(source_df))
     ]
 
