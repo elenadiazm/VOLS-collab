@@ -117,8 +117,8 @@ my_visFileBaseName = ['22A-195.sb41668223.eb41905952.59761.608695324074_cont']
 
 my_vislist = [basename + '.ms' for basename in my_visFileBaseName]
 
-my_dates = ['20220403','20220410','20220413','20220415','20220419','20220421','20220423','20220424a','20220424b','20220426','20220429','20220430',
-       '20220501a','20220501b','20220502','20220503','20220522','20220524','20220603','20220604','20220607', '20220610','20220611','20220614a','20220614b','20220701']
+#my_dates = ['20220403','20220410','20220413','20220415','20220419','20220421','20220423','20220424a','20220424b','20220426','20220429','20220430',
+#       '20220501a','20220501b','20220502','20220503','20220522','20220524','20220603','20220604','20220607', '20220610','20220611','20220614a','20220614b','20220701']
 
 my_dates = ['20220701']
 
@@ -530,16 +530,18 @@ for i in range(0, len(my_vislist)):
 
         bright_sources_df = my_catalog_df[my_catalog_df['snr_self'] > 3] # NOTE.- Need to check if the first lines are with #
 
+        bright_sources_df.sort_values(by=['Peak_flux'], ascending=False, inplace=True) # Sorting from higher value to lower value of the peak flux
+        bright_sources_df['submosaic'] = my_submosaic
+
         bright_sources_df.to_csv(my_dir + 'data/' + my_imageName  + '_bright_sources.csv', index=False) 
 
         print('==> You can check the bright sources catalog in ' + my_dir + 'data/' + my_imageName + '_bright_sources.csv')
 
-        print('::: VOLS ::: ... Working first with the bright sources')
-
-        bright_sources_df.sort_values(by=['Peak_flux'], ascending=False, inplace=True) # Sorting from higher value to lower value of the peak flux
-        bright_sources_df['submosaic'] = my_submosaic
         all_bright_sources.append(bright_sources_df)
+        
     
+    print('::: VOLS ::: ... Working first with the bright sources')
+
     if all_bright_sources:
 
         all_bright_sources_df = pd.concat(all_bright_sources, ignore_index=True)
@@ -792,7 +794,7 @@ for i in range(0, len(my_vislist)):
 
                 os.system('mkdir -p ' + my_dir + 'calibration-tables')
 
-                my_caltable = my_dir+'calibration-tables/caltable_'+str(my_dates[i])+ +'_'+ my_fields_join + '_'+ my_calmode + '_spw' + my_spw+'.tb'
+                my_caltable = my_dir+'calibration-tables/caltable_'+str(my_dates[i])+ '_'+ my_fields_join + '_'+ my_calmode + '_spw' + my_spw+'.tb'
 
                 print("::: VOLS ::: ... gaincal for self-calibration")
 
