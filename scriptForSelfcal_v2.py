@@ -931,7 +931,7 @@ for i in range(0, len(my_vislist)):
 
     # print('==> Pointings not self-calibrated: ' + str(not_selfcal_pointings))
 
-    # my_visFile_NOselfcal = my_visFile+ '.NOselfcal.iter1'
+    my_visFile_NOselfcal = my_visFile+ '.NOselfcal.iter1'
 
     # os.system('rm -r ' + my_visFile_NOselfcal)
 
