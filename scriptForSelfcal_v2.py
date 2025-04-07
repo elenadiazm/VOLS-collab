@@ -33,7 +33,7 @@ class Logger(object):
 #my_dir = '/share/Part2/ediaz/VOLS/'     # multivac
 my_dir = '/home/VOLS/'                    # servervols
 
-my_dir_ms =  my_dir + 'CALIBRATED_CONTINUUM/'
+my_dir_ms =  my_dir + 'calibrated_continuum/'
 
 delete_products = True
 
