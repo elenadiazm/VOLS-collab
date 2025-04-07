@@ -1303,7 +1303,7 @@ for i in range(0, len(my_vislist)):
     #                 field=my_fields_str,
     #                 )
 
-    print('==> Pointings self-calibrated: ' + str(selfcal_pointings)) 
+    #print('==> Pointings self-calibrated: ' + str(selfcal_pointings)) 
 
     #not_selfcal_pointings = all_pointings - selfcal_pointings
     not_selfcal_pointings = {'P67', 'P47', 'P1', 'P25', 'P92', 'P72', 'P12', 'P88', 'P14', 'P84', 'P87', 'P26', 'P16', 'P2', 'P66', 'P5', 'P17', 'P107', 'P46', 'P6', 'P13'}
