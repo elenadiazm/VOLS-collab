@@ -17,11 +17,11 @@ import shutil
 
 ############################# PARAMETERS TO CHANGE ######################################
 
-#my_dir = '/share/Part2/ediaz/VOLS/'                     # multivac
-my_dir = '/home/VOLS/'                                 # servervols
+my_dir = '/share/Part2/ediaz/VOLS/'                     # multivac
+#my_dir = '/home/VOLS/'                                 # servervols
 
-#my_dir_ms =  my_dir + 'CALIBRATED_CONTINUUM/'           # multivac
-my_dir_ms =  my_dir + 'calibrated_continuum/'          # servervols
+my_dir_ms =  my_dir + 'CALIBRATED_CONTINUUM/'           # multivac
+#my_dir_ms =  my_dir + 'calibrated_continuum/'          # servervols
 
 delete_products = True
 
@@ -137,14 +137,15 @@ def tar_and_remove(src_path, tar_name, arcname=None, label=''):
 # '22A-195.sb41668223.eb41852443.59744.76640462963_cont',
 # '22A-195.sb41668223.eb41905952.59761.608695324074_cont']
 
-my_visFileBaseName = ['22A-195.sb41668223.eb41852443.59744.76640462963_cont']
+my_visFileBaseName = ['22A-195.sb41668223.eb41788874.59701.92147296296_cont',
+'22A-195.sb41668223.eb41789898.59702.90341413194_cont']
 
 my_vislist = [basename + '.ms' for basename in my_visFileBaseName]
 
 #my_dates = ['20220403','20220410','20220413','20220415','20220419','20220421','20220423','20220424a','20220424b','20220426','20220429','20220430',
 #       '20220501a','20220501b','20220502','20220503','20220522','20220524','20220603','20220604','20220607', '20220610','20220611','20220614a','20220614b','20220701']
 
-my_dates = ['20220614b']
+my_dates = ['20220502','20220503']
 
 # Submosaics to image
 
