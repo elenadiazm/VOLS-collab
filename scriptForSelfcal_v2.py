@@ -283,7 +283,7 @@ for i in range(0, len(my_vislist)):
                    pbmask=0.0,
                    )
         
-        for suffix in ['.sumwt*', '.psf*', '.weight*', '.mask*']:
+        for suffix in ['.sumwt*', '.weight*', '.mask*']:
             os.system(f'rm -rf {my_imageFile}{suffix}')
 
         os.system('cp -r ' + my_imageFile + '.image.tt0 .')
@@ -369,7 +369,7 @@ for i in range(0, len(my_vislist)):
                   pbmask=0.0,
                   )
         
-        for suffix in ['.sumwt*', '.psf*', '.weight*','*.mask*']:
+        for suffix in ['.sumwt*', '.weight*','*.mask*']:
             os.system(f'rm -rf {my_imageFile}{suffix}')
 
         os.system('cp -r ' + my_imageFile + '.image.tt0 .')
@@ -456,7 +456,7 @@ for i in range(0, len(my_vislist)):
                   pbmask=0.0,
                   )
         
-        for suffix in ['.sumwt*', '.psf*', '.weight*','*.mask*']:
+        for suffix in ['.sumwt*', '.weight*','*.mask*']:
             os.system(f'rm -rf {my_imageFile}{suffix}')
        
         exportfits(imagename = my_imageFile + '.image.tt0', fitsimage = my_imageFile + '.fits', overwrite = True)
@@ -588,7 +588,7 @@ for i in range(0, len(my_vislist)):
 
         all_bright_sources_df = pd.concat(all_bright_sources, ignore_index=True)
         all_bright_sources_df.sort_values(by='Peak_flux', ascending=False, inplace=True)
-        combined_path = os.path.join(my_dir, 'data', f'VOLS_bright_sources_combined_{my_dates[i]}.csv')
+        combined_path = os.path.join(my_dir, 'data', str(my_dates[i]), f'VOLS_bright_sources_combined_{my_dates[i]}.csv')
         all_bright_sources_df.to_csv(combined_path, index=False)
 
         print(f'::: VOLS ::: Combined file saved in: {combined_path}')
@@ -693,7 +693,7 @@ for i in range(0, len(my_vislist)):
                         pbmask = 0.0,
                         )
                 
-                for suffix in ['.sumwt*', '.psf*', '.weight*','*.mask*']:
+                for suffix in ['.sumwt*', '.weight*','*.mask*']:
                     os.system(f'rm -rf {my_imageFile}{suffix}')
                 
                 os.system('cp -r ' + my_imageFile + '.image .')
@@ -789,7 +789,7 @@ for i in range(0, len(my_vislist)):
                         pbmask = 0.0,
                         )
                 
-                for suffix in ['.sumwt*', '.psf*', '.weight*','*.mask*']:
+                for suffix in ['.sumwt*', '.weight*','*.mask*']:
                     os.system(f'rm -rf {my_imageFile}{suffix}')
 
                 os.system('cp -r ' + my_imageFile + '.image .')
@@ -918,7 +918,7 @@ for i in range(0, len(my_vislist)):
                    pbmask=0.0,
                    )
             
-                for suffix in ['.sumwt*', '.psf*', '.weight*','*.mask*']:
+                for suffix in ['.sumwt*', '.weight*','*.mask*']:
                     os.system(f'rm -rf {my_imageFile}{suffix}')
 
                 print('::: VOLS ::: ... Checking the RMS from an emission-free region of the image, near the bright source')
@@ -1029,7 +1029,7 @@ for i in range(0, len(my_vislist)):
                    pbmask=0.0,
                    )
         
-        for suffix in ['.sumwt*', '.psf*', '.weight*','*.mask*']:
+        for suffix in ['.sumwt*', '.weight*','*.mask*']:
             os.system(f'rm -rf {my_imageFile}{suffix}')
         
         if my_submosaic == '01':
@@ -1077,7 +1077,7 @@ for i in range(0, len(my_vislist)):
                    )
 
 
-        for suffix in ['.sumwt*', '.psf*', '.weight*','*.mask*']:
+        for suffix in ['.sumwt*', '.weight*','*.mask*']:
             os.system(f'rm -rf {my_imageFile}{suffix}')
 
         my_imageFile = my_dir + 'images/selfcal/bright_sources/VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
@@ -1167,7 +1167,7 @@ for i in range(0, len(my_vislist)):
                    pbmask=0.0,
                    )
         
-        for suffix in ['.sumwt*', '.psf*', '.weight*','*.mask*']:
+        for suffix in ['.sumwt*', '.weight*','*.mask*']:
             os.system(f'rm -rf {my_imageFile}{suffix}')
         
         exportfits(imagename = my_imageFile + '.image', fitsimage = my_imageFile + '.fits', overwrite = True)
@@ -1253,7 +1253,7 @@ for i in range(0, len(my_vislist)):
 
         all_10sigma_sources_df = pd.concat(all_10sigma_sources, ignore_index=True)
         all_10sigma_sources_df.sort_values(by='Peak_flux', ascending=False, inplace=True)
-        combined_path = os.path.join(my_dir, 'data', f'VOLS_10sigma_sources_combined_{my_dates[i]}.csv')
+        combined_path = os.path.join(my_dir, 'data', str(my_dates[i]), f'VOLS_10sigma_sources_combined_{my_dates[i]}.csv')
         all_10sigma_sources_df.to_csv(combined_path, index=False)
 
         print(f'::: VOLS ::: Combined file saved in: {combined_path}')
@@ -1399,7 +1399,7 @@ for i in range(0, len(my_vislist)):
                    pbmask=0.0,
                    )
         
-        for suffix in ['.sumwt*', '.psf*', '.weight*','*.mask*']:
+        for suffix in ['.sumwt*', '.weight*','*.mask*']:
             os.system(f'rm -rf {my_imageFile}{suffix}')
         
         print('::: VOLS ::: ... Calculating statistical information from the image')
@@ -1460,8 +1460,66 @@ for i in range(0, len(my_vislist)):
                    pbmask=0.0,
                    )
             
-            for suffix in ['.sumwt*', '.psf*', '.weight*','*.mask*']:
+            for suffix in ['.sumwt*', '.weight*','*.mask*']:
                 os.system(f'rm -rf {my_imageFile}{suffix}')
+
+
+        print('==> The continuum images are done')
+
+        print('::: VOLS ::: ... Creating polarization dirty images')
+
+        stokes = ['Q','U','V']
+
+        os.system('mkdir -p ' + my_dir + 'images/selfcal/polarization')
+
+        for my_stokes in stokes:
+
+            my_imageFile = my_dir + 'images/selfcal/polarization/VOLS_selfcal_dirty_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) +'_'+ my_calmode+'_stokes'+str(my_stokes)
+            my_maskFile = my_dir + 'masks/selfcal/VOLS_selfcal_mask_10sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) 
+
+            print('::: VOLS ::: ... Creating the dirty image with the self-calibrated data with stokes' + str(my_stokes))
+
+            os.system('rm -rf ' + my_imageFile + '.*')	
+
+            tclean(vis=my_visFile_final,
+                   uvrange='>35klambda', 
+                   datacolumn='corrected',
+                   spw=my_spws,
+                   field=my_submosaicData['my_submosaicPointings'][my_submosaic],
+                   phasecenter=my_submosaicData['my_submosaicPhaseCenter'][my_submosaic],
+                   imagename=my_imageFile,
+                   imsize=my_submosaicData['my_submosaicImsize'][my_submosaic],
+                   cell=['0.125arcsec'],
+                   stokes=my_stokes,
+                   specmode='mfs',
+                   gridder='mosaic',
+                   mosweight=False,
+                   usepointing=False,
+                   pblimit=0.1,
+                   deconvolver='hogbom',
+                   #nterms=2,
+                   restoration=True,
+                   pbcor=False,
+                   weighting='briggs',
+                   robust=0.5,
+                   npixels=0,
+                   niter=0,
+                   usemask='user',
+                   mask=my_maskFile + '.mask',  
+                   #threshold='0.1mJy',
+                   interactive=False,
+                   restart=False,
+                   savemodel='none',
+                   calcres=True,
+                   calcpsf=True,
+                   parallel=False,
+                   pbmask=0.0,
+                   )
+        
+            for suffix in ['.sumwt*', '.weight*','*.mask*']:
+                os.system(f'rm -rf {my_imageFile}{suffix}')
+
+
             
         if delete_products:
 
@@ -1503,6 +1561,12 @@ for i in range(0, len(my_vislist)):
     os.system('mkdir -p ' + my_dir + 'products/final/selfcal')
 
     os.system('mv ' + my_dir + 'images/selfcal/final/*'+str(my_dates[i])+'* '+ my_dir + 'products/final/selfcal')
+
+    print('==> The polarization images are being moved to ' + my_dir + 'products/final')
+
+    os.system('mkdir -p ' + my_dir + 'products/final/polarization')
+
+    os.system('mv ' + my_dir + 'images/selfcal/polarization/*'+str(my_dates[i])+'* '+ my_dir + 'products/final/polarization')    
 
     tar_and_remove(my_visFile, my_visFile, arcname=my_vislist[i], label='Original measurement set')
     tar_and_remove(my_visFile_selfcal, my_visFile_selfcal, arcname=my_vislist[i], label='Self-calibrated with the bright sources measurement set')
