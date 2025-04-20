@@ -137,15 +137,15 @@ def tar_and_remove(src_path, tar_name, arcname=None, label=''):
 # '22A-195.sb41668223.eb41852443.59744.76640462963_cont',
 # '22A-195.sb41668223.eb41905952.59761.608695324074_cont']
 
-my_visFileBaseName = ['22A-195.sb41668223.eb41788874.59701.92147296296_cont',
-'22A-195.sb41668223.eb41789898.59702.90341413194_cont']
+my_visFileBaseName = ['22A-195.sb41668223.eb41815091.59721.7578799537_cont',
+                      '22A-195.sb41668223.eb41818503.59723.85374815972_cont']
 
 my_vislist = [basename + '.ms' for basename in my_visFileBaseName]
 
 #my_dates = ['20220403','20220410','20220413','20220415','20220419','20220421','20220423','20220424a','20220424b','20220426','20220429','20220430',
 #       '20220501a','20220501b','20220502','20220503','20220522','20220524','20220603','20220604','20220607', '20220610','20220611','20220614a','20220614b','20220701']
 
-my_dates = ['20220502','20220503']
+my_dates = ['20220522','20220524']
 
 # Submosaics to image
 
@@ -1477,7 +1477,7 @@ for i in range(0, len(my_vislist)):
             my_imageFile = my_dir + 'images/selfcal/polarization/VOLS_selfcal_dirty_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) +'_'+ my_calmode+'_stokes'+str(my_stokes)
             my_maskFile = my_dir + 'masks/selfcal/VOLS_selfcal_mask_10sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) 
 
-            print('::: VOLS ::: ... Creating the dirty image with the self-calibrated data with stokes' + str(my_stokes))
+            print('::: VOLS ::: ... Creating the dirty image with the self-calibrated data with stokes ' + str(my_stokes))
 
             os.system('rm -rf ' + my_imageFile + '.*')	
 
