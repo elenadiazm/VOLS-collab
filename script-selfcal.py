@@ -192,7 +192,8 @@ my_submosaicData = {
 
 for i in range(0, len(my_vislist)):
 
-    os.system('mkdir -p ' + my_dir + 'logs')
+    os.makedirs(my_dir + 'logs', exist_ok=True)
+
 
     log_file =  my_dir +  'logs/' + 'imagin-selfcal.' + str(my_dates[i]) + '.log'
     log_fh = open(log_file, 'w')
@@ -207,7 +208,8 @@ for i in range(0, len(my_vislist)):
 
     print('::: VOLS ::: ... Sorting the spectral windows by frequency')
 
-    os.system('mkdir -p ' + my_dir + 'visibilities/' + str(my_dates[i]) + '/CALIBRATED_CONTINUUM_SPW_ORDERED/')
+
+    os.makedirs(my_dir + 'visibilities/' + str(my_dates[i]) + '/CALIBRATED_CONTINUUM_SPW_ORDERED/')
 
     os.system('rm -rf ' + my_dir + 'visibilities/' + str(my_dates[i]) + '/CALIBRATED_CONTINUUM_SPW_ORDERED/' + my_vislist[i])
 
@@ -237,9 +239,10 @@ for i in range(0, len(my_vislist)):
 
         print('==> Using spws ' + my_spws + ' for the imaging')
 
-        os.system('mkdir -p ' + my_dir + 'tmp/images/dirty')
+        
+        os.makedirs(my_dir + 'tmp/' + str(my_dates[i]) + '/images/dirty', exist_ok=True)
 
-        my_imageFile = my_dir + 'tmp/dirty/' + str(my_dates[i]) +'VOLS_dirty_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
+        my_imageFile = my_dir + 'tmp/' + str(my_dates[i]) + '/images/dirty/VOLS_dirty_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
 
         os.system('rm -rf ' + my_imageFile + '.*')
 
@@ -306,9 +309,9 @@ for i in range(0, len(my_vislist)):
 
         print('::: VOLS ::: ... Creating the mask for submosaic ' + str(my_submosaic) + ' using the dirty image')
 
-        os.system('mkdir -p ' + my_dir + 'tmp/masks/dirty/'+str(my_dates[i]))
+        os.makedirs(my_dir + 'tmp/' + str(my_dates[i]) + '/masks/dirty/', exist_ok=True)
 
-        my_maskFile = my_dir + 'tmp/masks/dirty/' +str(my_dates[i]) + '/VOLS_dirty_mask_0.8peak_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
+        my_maskFile = my_dir + 'tmp/' + str(my_dates[i]) + '/masks/dirty/VOLS_dirty_mask_0.8peak_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
 
         os.system('rm -rf ' + my_maskFile + '.*')
 
@@ -324,10 +327,10 @@ for i in range(0, len(my_vislist)):
 
         print('::: VOLS ::: ... Creating a clean image')
 
-        os.system('mkdir -p ' + my_dir + 'tmp/images/clean/' + str(my_dates[i]))
+        os.makedirs(my_dir + 'tmp/' + str(my_dates[i]) + '/images/clean', exist_ok=True)
 
-        my_imageFile = my_dir + 'tmp/images/clean/' + str(my_dates[i]) + '/VOLS_shallow_clean_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
-        my_maskFile = my_dir + 'tmp/masks/dirty/' + str(my_dates[i]) + '/VOLS_dirty_mask_0.8peak_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
+        my_imageFile = my_dir + 'tmp/' + str(my_dates[i]) + '/images/clean' + '/VOLS_shallow_clean_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
+        my_maskFile = my_dir + 'tmp/' + str(my_dates[i]) + '/masks/dirty/VOLS_dirty_mask_0.8peak_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
 
         os.system('rm -rf ' + my_imageFile + '.*')
 
@@ -393,9 +396,9 @@ for i in range(0, len(my_vislist)):
 
         print('::: VOLS ::: ... Creating the mask for submosaic ' + str(my_submosaic) + ' using the clean image')
 
-        os.system('mkdir -p ' + my_dir + 'intermediate-products/' + str(my_dates[i]) + '/masks/clean')
+        os.makedirs(my_dir + 'intermediate-products/' + str(my_dates[i]) + '/masks/clean', exist_ok=True)
 
-        my_maskFile = my_dir + 'intermediate-products/' + str(my_dates[i]) + '/masks/clean/' + 'VOLS_clean_mask_30sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
+        my_maskFile = my_dir + 'intermediate-products/' + str(my_dates[i]) + '/masks/clean/VOLS_clean_mask_30sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
 
         os.system('rm -rf ' + my_maskFile + '.*')
 
@@ -411,7 +414,7 @@ for i in range(0, len(my_vislist)):
 
         print('::: VOLS ::: ... Creating a clean image using the mask')
 
-        os.system('mkdir -p ' + my_dir + 'intermediate-products/' +  str(my_dates[i]) + '/images/clean')
+        os.makedirs(my_dir + 'intermediate-products/' +  str(my_dates[i]) + '/images/clean', exist_ok=True)
 
         my_imageFile = my_dir + 'intermediate-products/' +  str(my_dates[i]) + '/images/clean/' + 'VOLS_clean_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
         my_maskFile = my_dir + 'intermediate-products/' + str(my_dates[i]) + '/masks/clean/' + 'VOLS_clean_mask_30sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
@@ -477,7 +480,7 @@ for i in range(0, len(my_vislist)):
 
         rms_data = pd.DataFrame([[my_imageName, clean_rms]], columns=['observation', 'rms'])
 
-        os.system('mkdir -p ' + my_dir + 'auxiliary/pointings')
+        os.makedirs(my_dir + 'auxiliary/pointings', exist_ok=True)
 
         if os.path.exists(my_dir + 'auxiliary/pointings/rms.csv'):
         
@@ -511,7 +514,7 @@ for i in range(0, len(my_vislist)):
     
         
 
-        os.system('mkdir -p ' + my_dir + 'auxiliary/catalogs/' + str(my_dates[i]))
+        os.makedirs(my_dir + 'auxiliary/catalogs/' + str(my_dates[i]), exist_ok=True)
 
         my_catalog = my_dir + 'auxiliary/catalogs/' + str(my_dates[i]) + '/' + my_imageName  + '_10sigma_catalog.csv'
         
@@ -566,7 +569,7 @@ for i in range(0, len(my_vislist)):
 
         my_catalog_df.sort_values(by=['Peak_flux'], ascending=False, inplace=True) # Sorting from higher value to lower value of the peak flux
 
-        my_catalog_df.to_csv(my_catalog, index=False)
+        #my_catalog_df.to_csv(my_catalog, index=False)
 
         print('::: VOLS ::: ... Creating a new dataset with the sources that accomplish (S/N) > 3') 
 
@@ -575,7 +578,7 @@ for i in range(0, len(my_vislist)):
         bright_sources_df.sort_values(by=['Peak_flux'], ascending=False, inplace=True) # Sorting from higher value to lower value of the peak flux
         bright_sources_df['submosaic'] = my_submosaic
 
-        bright_sources_df.to_csv(my_dir + 'auxiliary/catalogs/' + str(my_dates[i]) + '/' + my_imageName  + '_bright_sources.csv', index=False) 
+        #bright_sources_df.to_csv(my_dir + 'auxiliary/catalogs/' + str(my_dates[i]) + '/' + my_imageName  + '_bright_sources.csv', index=False) 
 
         print('==> You can check the bright sources catalog in ' + my_dir + 'auxiliary/catalogs/' + str(my_dates[i]) + '/'  + my_imageName + '_bright_sources.csv')
 
@@ -588,8 +591,10 @@ for i in range(0, len(my_vislist)):
 
         all_bright_sources_df = pd.concat(all_bright_sources, ignore_index=True)
         all_bright_sources_df.sort_values(by='Peak_flux', ascending=False, inplace=True)
-        combined_path = os.path.join(my_dir, 'data', str(my_dates[i]), f'VOLS_bright_sources_combined_{my_dates[i]}.csv')
+        combined_path = os.path.join(my_dir, 'auxiliary', 'catalogs', str(my_dates[i]), 'VOLS_clean_Cband_cont_' + str(my_dates[i]) + '_bright_sources_combined.csv')
+        os.makedirs(os.path.dirname(combined_path), exist_ok=True)
         all_bright_sources_df.to_csv(combined_path, index=False)
+
 
         print(f'::: VOLS ::: Combined file saved in: {combined_path}')
 
@@ -606,7 +611,7 @@ for i in range(0, len(my_vislist)):
 
             if  num_pointings <= 5:
 
-                my_imsize = [6720, 6720]  # para pocos pointings
+                my_imsize = [6720, 6720]  # para pocos apuntados
             else:
                 my_imsize = [10080, 10080]  # para mosaico más grande
 
@@ -622,8 +627,6 @@ for i in range(0, len(my_vislist)):
             my_fields_join = "".join(new_pointings) # TO BE WRITTEN LIKE P8P9P10
 
             selfcal_pointings.update(new_pointings)  # Add new pointings to the set
-
-            # centerbox[[x, y], [x_width, y_width]]
 
             my_peak_region = 'centerbox[[' + str(row['RA']) + 'deg,' + str(row['DEC']) + 'deg],[3arcsec,3arcsec]]'
 
@@ -647,7 +650,7 @@ for i in range(0, len(my_vislist)):
 
             print('::: VOLS ::: ... Creating individual images for each spectral window')
 
-            my_spws_selfcal = ['0','1','2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31']
+            my_spws_selfcal = [str(i) for i in range(32)]
 
             for my_spw in my_spws_selfcal:
 
@@ -655,9 +658,9 @@ for i in range(0, len(my_vislist)):
 
                 print('::: VOLS ::: ... Creating the dirty image')
 
-                os.system('mkdir -p ' + my_dir+ 'images/each_spw/dirty')
+                os.makedirs(my_dir + 'tmp/' + str(my_dates[i]) + '/images/each_spw/dirty', exist_ok=True)
 
-                my_imageFile =  my_dir + 'images/each_spw/dirty/VOLS_dirty_Cband_cont_' + str(my_dates[i]) +  '_'+ my_fields_join + '_spw' + my_spw
+                my_imageFile =  my_dir +  'tmp/' + str(my_dates[i]) + '/images/each_spw/dirtyVOLS_dirty_Cband_cont_' + str(my_dates[i]) +  '_'+ my_fields_join + '_spw' + my_spw
 
                 os.system('rm -r ' + my_imageFile + '.*')
 
@@ -710,6 +713,7 @@ for i in range(0, len(my_vislist)):
 
                 else:
                     print('Skipping iteration: Empty region found for ' + my_imageFile)
+                    os.system('rm -r VOLS_dirty_Cband_cont_' + str(my_dates[i]) + '_'+ my_fields_join + '_spw' + my_spw + '.image')
                     continue
 
                 print('::: VOLS ::: ... Calculating the SNR with a bright source in the region')
@@ -731,9 +735,9 @@ for i in range(0, len(my_vislist)):
 
                 print('==> threshold: '+ str(threshold) + ' Jy/beam')
 
-                os.system('mkdir -p ' + my_dir + 'masks/each_spw/dirty')
+                os.makedirs(my_dir + 'tmp/' + str(my_dates[i]) + '/masks/each_spw/dirty', exist_ok=True)
 
-                my_maskFile = my_dir + 'masks/each_spw/dirty/VOLS_dirty_mask_20sigma_Cband_cont_' + str(my_dates[i]) + '_'+ my_fields_join + '_spw' + my_spw
+                my_maskFile = my_dir +  'tmp/' + str(my_dates[i]) + '/masks/each_spw/dirty/VOLS_dirty_mask_20sigma_Cband_cont_' + str(my_dates[i]) + '_'+ my_fields_join + '_spw' + my_spw
 
                 os.system('rm -rf ' + my_maskFile + '.*')
 
@@ -747,10 +751,10 @@ for i in range(0, len(my_vislist)):
 
                 print('::: VOLS ::: ... Creating a clean image using the dirty mask for spectral window '+ my_spw)
 
-                os.system('mkdir -p ' + my_dir+ 'images/each_spw/clean')
+                os.makedirs(my_dir + 'intermediate-products/' + str(my_dates[i]) + '/images/each_spw/clean', exist_ok=True)
 
-                my_imageFile =  my_dir + 'images/each_spw/clean/VOLS_clean_Cband_cont_' + str(my_dates[i]) + '_'+ my_fields_join + '_spw' + my_spw
-                my_maskFile = my_dir + 'masks/each_spw/dirty/VOLS_dirty_mask_20sigma_Cband_cont_' + str(my_dates[i]) + '_'+ my_fields_join + '_spw' + my_spw
+                my_imageFile =  my_dir +  'intermediate-products/' + str(my_dates[i]) + '/images/each_spw/clean/VOLS_clean_Cband_cont_' + str(my_dates[i]) + '_'+ my_fields_join + '_spw' + my_spw
+                my_maskFile = my_maskFile = my_dir +  'tmp/' + str(my_dates[i]) + '/masks/each_spw/dirty/VOLS_dirty_mask_20sigma_Cband_cont_' + str(my_dates[i]) + '_'+ my_fields_join + '_spw' + my_spw
 
                 os.system('rm -r ' + my_imageFile + '.*')
 
@@ -821,9 +825,9 @@ for i in range(0, len(my_vislist)):
 
                 print('==> Threshold: '+ str(threshold) + ' Jy/beam')
 
-                os.system('mkdir -p ' + my_dir + 'masks/each_spw/clean')
+                os.makedirs(my_dir + 'intermediate-products/' + str(my_dates[i]) + '/masks/each_spw/clean', exist_ok=True)
 
-                my_maskFile = my_dir + 'masks/each_spw/clean/VOLS_clean_mask_20sigma_Cband_cont_' + str(my_dates[i]) +  '_'+ my_fields_join + '_spw' + my_spw
+                my_maskFile = my_dir + 'intermediate-products/' + str(my_dates[i]) + '/masks/each_spw/clean/VOLS_clean_mask_20sigma_Cband_cont_' + str(my_dates[i]) +  '_'+ my_fields_join + '_spw' + my_spw
 
                 os.system('rm -rf ' + my_maskFile + '.*')
 
@@ -840,9 +844,9 @@ for i in range(0, len(my_vislist)):
                 prev_rms = rms # initiallizing rms
                 prev_snr = snr # initiallizing snr
 
-                os.system('mkdir -p ' + my_dir + 'calibration-tables/' +str(my_dates[i]) + '/each_spw')
-
-                my_caltable = my_dir+'calibration-tables/' +str(my_dates[i]) + '/each_spw/caltable_'+str(my_dates[i])+ '_'+ my_fields_join + '_'+ my_calmode + '_spw' + my_spw+'.tb'
+                os.makedirs(my_dir + 'final-products/' + str(my_dates[i]) + '/calibration-tables/each_spw', exist_ok=True)
+ 
+                my_caltable = my_dir + 'final-products/' + str(my_dates[i]) + '/calibration-tables/each_spw/caltable_'+str(my_dates[i])+ '_'+ my_fields_join + '_'+ my_calmode + '_spw' + my_spw+'.tb'
 
                 print("::: VOLS ::: ... gaincal for self-calibration")
 
@@ -864,7 +868,7 @@ for i in range(0, len(my_vislist)):
 
                 applycal(
                     vis=my_visFile_submosaic,
-                    uvrange=my_submosaicData['my_uvrange'][row['submosaic']],
+                    uvrange='', # applying to the whole uvrange
                     gaintable=my_caltable,
                     interp='linear',
                     applymode='calonly',
@@ -873,13 +877,12 @@ for i in range(0, len(my_vislist)):
                 
                 print('::: VOLS ::: ... Creating a self-calibrated image for spectral window '+ my_spw)
 
-                os.system('mkdir -p ' + my_dir + 'images/each_spw/selfcal')
+                os.makedirs(my_dir + 'intermediate-products/' + str(my_dates[i]) + '/images/each_spw/selfcal', exist_ok=True)
 
                 # By default, all final images will be done excluding the short baselines (>35klambda)
 
-                my_imageFile = my_dir + 'images/each_spw/selfcal/VOLS_selfcal_Cband_cont_' + str(my_dates[i])  +'_'+ my_fields_join + '_'+ my_calmode + '_spw' + my_spw
-
-                my_maskFile = my_dir + 'masks/each_spw/clean/VOLS_clean_mask_20sigma_Cband_cont_' + str(my_dates[i]) + '_'+ my_fields_join + '_spw' + my_spw
+                my_imageFile = my_dir + 'intermediate-products/' + str(my_dates[i]) + '/images/each_spw/selfcal/VOLS_selfcal_Cband_cont_' + str(my_dates[i])  +'_'+ my_fields_join + '_'+ my_calmode + '_spw' + my_spw
+                my_maskFile = my_dir + 'intermediate-products/' + str(my_dates[i]) + '/masks/each_spw/clean/VOLS_clean_mask_20sigma_Cband_cont_' + str(my_dates[i]) +  '_'+ my_fields_join + '_spw' + my_spw
 
                 os.system('rm -rf ' + my_imageFile + '.*')
 
@@ -984,12 +987,13 @@ for i in range(0, len(my_vislist)):
     print('NOTE.- This measurement sets contains the self-calibrated pointings that contain bright sources AND the ones that have not been self-calibrated')
 
 
-    for my_submosaic in my_submosaics:    
-    
-        os.system('mkdir -p ' + my_dir + 'images/selfcal/bright_sources')
+    for my_submosaic in my_submosaics:  
 
-        my_imageFile = my_dir + 'images/selfcal/bright_sources/VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
-        my_maskFile = my_dir + 'masks/clean/VOLS_clean_mask_30sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) 
+
+        os.makedirs(my_dir + 'final-products/' + str(my_dates[i]) + 'images/selfcal/bright_sources', exist_ok=True)
+    
+        my_imageFile = my_dir + 'final-products/' + str(my_dates[i]) + 'images/selfcal/bright_sources/VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
+        my_maskFile = my_dir + 'intermediate-products/' + str(my_dates[i]) + '/masks/clean/VOLS_clean_mask_30sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
 
         print('::: VOLS ::: ... Creating the self-calibrated image with the calibration spw by spw on the pointings that contain bright sources')
 
@@ -1035,8 +1039,8 @@ for i in range(0, len(my_vislist)):
         
         if my_submosaic == '01':
 
-            my_imageFile = my_dir + 'images/selfcal/bright_sources/VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)+'_35klambda'
-            my_maskFile = my_dir + 'masks/clean/VOLS_clean_mask_30sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) 
+            my_imageFile = my_dir + 'final-products/' + str(my_dates[i]) + 'images/selfcal/bright_sources/VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)+'_35klambda'
+            my_maskFile = my_dir + 'intermediate-products/' + str(my_dates[i]) + '/masks/clean/VOLS_clean_mask_30sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
 
             print('::: VOLS ::: ... Creating another self-calibrated image excluding only short baselines (>35klambda)')
 
@@ -1081,7 +1085,7 @@ for i in range(0, len(my_vislist)):
         for suffix in ['.sumwt*', '.weight*','*.mask*']:
             os.system(f'rm -rf {my_imageFile}{suffix}')
 
-        my_imageFile = my_dir + 'images/selfcal/bright_sources/VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
+        my_imageFile = my_dir + 'final-products/' + str(my_dates[i]) + 'images/selfcal/bright_sources/VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
 
         os.system('cp -r ' + my_imageFile + '.image.tt0 .')
 
@@ -1106,9 +1110,9 @@ for i in range(0, len(my_vislist)):
 
         print('::: VOLS ::: ... Creating the mask for submosaic ' + str(my_submosaic) + ' using the self-calibrated image')
 
-        os.system('mkdir -p ' + my_dir + 'masks/selfcal')
+        os.makedirs(my_dir + 'intermediate-products/' + str(my_dates[i]) + '/masks/selfcal', exist_ok=True)
 
-        my_maskFile = my_dir + 'masks/selfcal/VOLS_selfcal_mask_10sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
+        my_maskFile = my_dir + 'intermediate-products/' + str(my_dates[i]) + '/masks/selfcal/VOLS_selfcal_mask_10sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
 
         os.system('rm -rf ' + my_maskFile + '.*')
 
@@ -1122,11 +1126,10 @@ for i in range(0, len(my_vislist)):
 
         os.system('rm -r VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)  + '.image.tt0')
 
-        os.system('mkdir -p ' + my_dir + 'images/selfcal/bright_sources')
 
-        my_imageFile = my_dir + 'images/selfcal/bright_sources/VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)+'_hogbom'
+        my_imageFile = my_dir + 'final-products/' + str(my_dates[i]) + 'images/selfcal/bright_sources/VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)+'_hogbom'
         my_imageName = 'VOLS_selfcal_bright_sources_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)+'_hogbom'
-        my_maskFile = my_dir + 'masks/selfcal/VOLS_selfcal_mask_10sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) 
+        my_maskFile = my_dir + 'intermediate-products/' + str(my_dates[i]) + '/masks/selfcal/VOLS_selfcal_mask_10sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
 
         print('::: VOLS ::: ... Creating the self-calibrated image using hogbom and the mask at 10sigma')
 
@@ -1247,14 +1250,17 @@ for i in range(0, len(my_vislist)):
         my_catalog_df.sort_values(by=['Peak_flux'], ascending=False, inplace=True) # Sorting from higher value to lower value of the peak flux
         my_catalog_df['submosaic'] = my_submosaic
         all_10sigma_sources.append(my_catalog_df)
-        my_catalog_df.to_csv(my_catalog, index=False)
+        
+        #my_catalog_df.to_csv(my_catalog, index=False)
   
     
     if all_10sigma_sources:
 
         all_10sigma_sources_df = pd.concat(all_10sigma_sources, ignore_index=True)
         all_10sigma_sources_df.sort_values(by='Peak_flux', ascending=False, inplace=True)
-        combined_path = os.path.join(my_dir, 'data', str(my_dates[i]), f'VOLS_10sigma_sources_combined_{my_dates[i]}.csv')   # CHANGE NAME !!
+
+        combined_path = os.path.join(my_dir, 'auxiliary', 'catalogs', str(my_dates[i]), my_imageName, '_10sigma_sources_combined.csv')
+        os.makedirs(os.path.dirname(combined_path), exist_ok=True)
         all_10sigma_sources_df.to_csv(combined_path, index=False)
 
         print(f'::: VOLS ::: Combined file saved in: {combined_path}')
@@ -1262,7 +1268,6 @@ for i in range(0, len(my_vislist)):
         for index,row in all_10sigma_sources_df.iterrows():
 
             my_pointings = row['pointings']  # Get the pointings of each bright source
-            #pointings = set(my_pointings.split(",")) 
             pointings = set(my_pointings) 
     
             new_pointings = pointings - selfcal_pointings  # Exclude existing pointings
@@ -1298,9 +1303,9 @@ for i in range(0, len(my_vislist)):
 
             print('::: VOLS ::: ... Starting self-calibration in phase using the model with all the spws')
 
-            os.system('mkdir -p ' + my_dir + 'calibration-tables/' +str(my_dates[i]) + '/all_spw')
+            os.makedirs(my_dir + 'final-products/' + str(my_dates[i]) + '/calibration-tables/all_spw', exist_ok=True)
 
-            my_caltable = my_dir+'calibration-tables/' +str(my_dates[i]) + '/all_spw/caltable_'+str(my_dates[i]) +'_'+ my_fields_join + '_'+ my_calmode + '.tb'
+            my_caltable = my_dir + 'final-products/' + str(my_dates[i]) + '/calibration-tables/all_spw/caltable_'+str(my_dates[i]) +'_'+ my_fields_join + '_'+ my_calmode + '.tb'
 
             print("::: VOLS ::: ... gaincal for self-calibration")
 
@@ -1322,7 +1327,7 @@ for i in range(0, len(my_vislist)):
 
             applycal(
                     vis=my_visFile_submosaic,
-                    uvrange='35klambda',
+                    uvrange='', # no restrictions in the uvrange
                     gaintable=my_caltable,
                     interp='linear',
                     applymode='calonly',
@@ -1356,10 +1361,12 @@ for i in range(0, len(my_vislist)):
     concat(vis = points_to_concat, concatvis = my_visFile_final)
 
 
+    os.makedirs(my_dir + 'final-products/' + str(my_dates[i]) + 'images/selfcal/final', exist_ok=True)
+
     for my_submosaic in my_submosaics:
 
-        my_imageFile = my_dir + 'images/selfcal/final/VOLS_selfcal_final_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) +'_'+ my_calmode
-        my_maskFile = my_dir + 'masks/selfcal/VOLS_selfcal_mask_10sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) 
+        my_imageFile = my_dir + 'final-products/' + str(my_dates[i]) + 'images/selfcal/final/VOLS_selfcal_final_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) +'_'+ my_calmode
+        my_maskFile = my_dir + 'intermediate-products/' + str(my_dates[i]) + '/masks/selfcal/VOLS_selfcal_mask_10sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
 
         print('::: VOLS ::: ... Creating the self-calibrated image after calibrating the pointings with weak sources for submosaic ' + str(my_submosaic))
 
@@ -1419,8 +1426,8 @@ for i in range(0, len(my_vislist)):
         
         if my_submosaic == '01':
 
-            my_imageFile = my_dir + 'images/selfcal/final/VOLS_selfcal_final_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) +'_'+ my_calmode+'_allBaselines'
-            my_maskFile = my_dir + 'masks/selfcal/VOLS_selfcal_mask_10sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) 
+            my_imageFile = my_dir + 'final-products/' + str(my_dates[i]) + 'images/selfcal/final/VOLS_selfcal_final_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) +'_'+ my_calmode + '_allBaselines'
+            my_maskFile = my_dir + 'intermediate-products/' + str(my_dates[i]) + '/masks/selfcal/VOLS_selfcal_mask_10sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
 
             print('::: VOLS ::: ... Creating and additional self-calibrated image using all baselines')
 
@@ -1471,12 +1478,12 @@ for i in range(0, len(my_vislist)):
 
         stokes = ['Q','U','V']
 
-        os.system('mkdir -p ' + my_dir + 'images/selfcal/polarization')
+        os.makedirs(my_dir + 'final-products/' + str(my_dates[i]) + 'images/polarization', exist_ok=True)
 
         for my_stokes in stokes:
 
-            my_imageFile = my_dir + 'images/selfcal/polarization/VOLS_selfcal_dirty_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) +'_'+ my_calmode+'_stokes'+str(my_stokes)
-            my_maskFile = my_dir + 'masks/selfcal/VOLS_selfcal_mask_10sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) 
+            my_imageFile = my_dir + 'final-products/' + str(my_dates[i]) + 'images/polarization/VOLS_selfcal_dirty_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic) +'_'+ my_calmode+'_stokes'+str(my_stokes)
+            #my_maskFile = my_dir + 'intermediate-products/' + str(my_dates[i]) + '/masks/selfcal/VOLS_selfcal_mask_10sigma_Cband_cont_' + str(my_dates[i]) + '_' + str(my_submosaic)
 
             print('::: VOLS ::: ... Creating the dirty image with the self-calibrated data with stokes ' + str(my_stokes))
 
@@ -1505,8 +1512,8 @@ for i in range(0, len(my_vislist)):
                    robust=0.5,
                    npixels=0,
                    niter=0,
-                   usemask='user',
-                   mask=my_maskFile + '.mask',  
+                   #usemask='user',
+                   #mask=my_maskFile + '.mask',  
                    #threshold='0.1mJy',
                    interactive=False,
                    restart=False,
@@ -1520,18 +1527,11 @@ for i in range(0, len(my_vislist)):
             for suffix in ['.sumwt*', '.weight*','*.mask*']:
                 os.system(f'rm -rf {my_imageFile}{suffix}')
 
-
             
         if delete_products:
 
-            print('::: VOLS ::: ... Deleting masks generated spw by spw')
-            os.system('rm -r ' + my_dir + 'masks/each_spw/*')
-
-            print('::: VOLS ::: ... Deleting dirty images generated spw by spw')
-            os.system('rm -r ' + my_dir + 'images/each_spw/dirty/')
-
             print('::: VOLS ::: ... Deleting temporary files')
-            os.system('rm -r ' + my_dir + 'tmp/*' )
+            os.system('rm -r ' + my_dir + 'tmp/' + str(my_dates[i]) + '/*' )
 
             print('::: VOLS ::: Deleting intermediate measurement sets')
 
@@ -1540,30 +1540,6 @@ for i in range(0, len(my_vislist)):
 
         print('==> The images for ms ' + my_vislist[i] +  ' in submosaic ' + str(my_submosaic) + ' are done, you can check (and enjoy) them now')
 
-    
-    print('==> The intermediate images (each_spw, clean and selfcal with bright sources) are being moved to ' + my_dir + 'products/intermediate')
-
-    os.system('mkdir -p ' + my_dir + 'products/intermediate/each_spw/clean')
-    os.system('mkdir -p ' + my_dir + 'products/intermediate/each_spw/selfcal')
-    #os.system('mkdir -p ' + my_dir + 'products/intermediate/clean')
-    os.system('mkdir -p ' + my_dir + 'products/intermediate/selfcal/bright_sources')
-
-    os.system('mv ' + my_dir + 'images/each_spw/clean/*'+str(my_dates[i])+'* '+ my_dir + 'products/intermediate/each_spw/clean')
-    os.system('mv ' + my_dir + 'images/each_spw/selfcal/*'+str(my_dates[i])+'* '+ my_dir + 'products/intermediate/each_spw/selfcal')
-    #os.system('mv ' + my_dir + 'images/clean/*'+str(my_dates[i])+'* '+ my_dir + 'products/intermediate/clean')
-    os.system('mv ' + my_dir + 'images/selfcal/bright_sources/*'+str(my_dates[i])+'* '+ my_dir + 'products/intermediate/selfcal/bright_sources')
-
-    print('==> The final self-calibrated images are being moved to ' + my_dir + 'products/final')
-
-    os.system('mkdir -p ' + my_dir + 'products/final/selfcal')
-
-    os.system('mv ' + my_dir + 'images/selfcal/final/*'+str(my_dates[i])+'* '+ my_dir + 'products/final/selfcal')
-
-    print('==> The polarization images are being moved to ' + my_dir + 'products/final')
-
-    os.system('mkdir -p ' + my_dir + 'products/final/polarization')
-
-    os.system('mv ' + my_dir + 'images/selfcal/polarization/*'+str(my_dates[i])+'* '+ my_dir + 'products/final/polarization')    
 
     tar_and_remove(my_visFile, my_visFile, arcname=my_vislist[i], label='Original measurement set')
     tar_and_remove(my_visFile_selfcal, my_visFile_selfcal, arcname=my_vislist[i], label='Self-calibrated with the bright sources measurement set')
